@@ -3,6 +3,11 @@
  * IndexedDB menyusul di Phase 5. API dibuat mirip supaya gampang diganti.
  */
 import type { CardProgress } from "../srs/types.js";
+import {
+  loadCardMeta,
+  saveCardMeta,
+  validateCardMeta,
+} from "./cardMeta.js";
 
 const PROGRESS_KEY = "kana.progress.v1";
 const STATS_KEY = "kana.stats.v1";
@@ -35,7 +40,7 @@ export interface Settings {
   dailyReviewLimit: number;
 }
 
-function read<T>(key: string, fallback: T): T {
+export function read<T>(key: string, fallback: T): T {
   try {
     const raw = localStorage.getItem(key);
     return raw ? (JSON.parse(raw) as T) : fallback;
@@ -44,7 +49,7 @@ function read<T>(key: string, fallback: T): T {
   }
 }
 
-function write(key: string, value: unknown): void {
+export function write(key: string, value: unknown): void {
   try {
     localStorage.setItem(key, JSON.stringify(value));
   } catch {
@@ -151,6 +156,7 @@ export function exportAll(): string {
       progress: loadProgress(),
       stats: loadStats(),
       settings: loadSettings(),
+      cardMetadata: loadCardMeta(),
       exportedAt: new Date().toISOString(),
     },
     null,
@@ -163,10 +169,14 @@ export function importAll(json: string): void {
     progress?: Record<string, CardProgress>;
     stats?: Stats;
     settings?: Settings;
+    cardMetadata?: unknown;
   };
   if (data.progress) saveProgress(data.progress);
   if (data.stats) saveStats(data.stats);
   if (data.settings) saveSettings({ ...DEFAULT_SETTINGS, ...data.settings });
+  // Metadata malformed ditolak diam-diam — data lama tetap utuh.
+  const meta = validateCardMeta(data.cardMetadata);
+  if (meta) saveCardMeta(meta);
 }
 
 export function resetAll(): void {

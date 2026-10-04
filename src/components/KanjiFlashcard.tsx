@@ -7,6 +7,7 @@ import { useJapaneseAudioAvailable } from "../audio/useJapaneseAudio.js";
 import type { StudyMode } from "../study/modes.js";
 import type { CardSource } from "../queue/index.js";
 import { SOURCE_LABELS } from "../queue/index.js";
+import { CardActions } from "./CardActions.js";
 
 /**
  * Isi belakang kartu kanji: character → readings (+audio) → meanings → examples.
@@ -159,6 +160,8 @@ export function KanjiFlashcard({
           </div>
         </div>
       </div>
+
+      <CardActions cardId={card.id} />
 
       {revealed && (
         <div className="rating-grid" role="group" aria-label="Nilai hafalan">

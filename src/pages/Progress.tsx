@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { loadProgress, loadSettings, loadStats, todayKey, getDailyCounts } from "../storage/progress.js";
+import { loadCardMeta, toggleFavorite, setSuspended } from "../storage/cardMeta.js";
+import { getCardById, cardSubLabel } from "../data/cards.js";
 import type { KanaScript } from "../data/kana/index.js";
 import { selectKana, GROUP_LABELS, KANA_GROUPS } from "../data/kana/index.js";
 import { selectKanji, countKanji } from "../data/kanji/index.js";
@@ -43,8 +45,21 @@ export function Progress() {
   const [stats] = useState(loadStats);
   const [progress] = useState(loadProgress);
   const [settings] = useState(loadSettings);
+  const [meta, setMeta] = useState(loadCardMeta);
   const today = stats.days[todayKey()];
   const daily = getDailyCounts();
+
+  // Daftar kartu favorite / suspended dari metadata (refresh saat ada aksi).
+  const favorites = Object.keys(meta)
+    .filter((id) => meta[id].favorite)
+    .map(getCardById)
+    .filter((c): c is NonNullable<typeof c> => !!c);
+  const suspended = Object.keys(meta)
+    .filter((id) => meta[id].suspended)
+    .map(getCardById)
+    .filter((c): c is NonNullable<typeof c> => !!c);
+
+  const refreshMeta = () => setMeta(loadCardMeta());
 
   return (
     <div className="page">
@@ -120,6 +135,65 @@ export function Progress() {
       <p style={{ color: "var(--ink-soft)", fontSize: 14 }}>
         N5–N1 Study Set — bukan daftar resmi JLPT.
       </p>
+
+      <hr className="divider" />
+
+      <p className="section-label">Favorites</p>
+      {favorites.length === 0 ? (
+        <p style={{ color: "var(--ink-soft)", fontSize: 14 }}>
+          Belum ada kartu favorit. Tandai ☆ Favorite pada kartu mana pun.
+        </p>
+      ) : (
+        <div className="meta-card-list">
+          {favorites.map((card) => (
+            <div className="meta-card-row" key={card.id}>
+              <span className="meta-card-char" lang="ja">{card.character}</span>
+              <span className="meta-card-sub">{cardSubLabel(card)}</span>
+              <button
+                type="button"
+                className="card-action-btn is-active"
+                aria-label={`Hapus ${card.character} dari favorit`}
+                aria-pressed="true"
+                onClick={() => {
+                  toggleFavorite(card.id);
+                  refreshMeta();
+                }}
+              >
+                ★
+              </button>
+            </div>
+          ))}
+        </div>
+      )}
+
+      <hr className="divider" />
+
+      <p className="section-label">Suspended</p>
+      {suspended.length === 0 ? (
+        <p style={{ color: "var(--ink-soft)", fontSize: 14 }}>
+          Tidak ada kartu yang di-suspend.
+        </p>
+      ) : (
+        <div className="meta-card-list">
+          {suspended.map((card) => (
+            <div className="meta-card-row" key={card.id}>
+              <span className="meta-card-char" lang="ja">{card.character}</span>
+              <span className="meta-card-sub">{cardSubLabel(card)}</span>
+              <button
+                type="button"
+                className="card-action-btn"
+                aria-label={`Kembalikan ${card.character} ke queue`}
+                onClick={() => {
+                  setSuspended(card.id, false);
+                  refreshMeta();
+                }}
+              >
+                Unsuspend
+              </button>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

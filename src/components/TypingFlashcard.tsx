@@ -6,6 +6,7 @@ import { stopSpeaking } from "../audio/index.js";
 import { checkTypingAnswer, type TypingCheckResult } from "../study/typing.js";
 import type { CardSource } from "../queue/index.js";
 import { SOURCE_LABELS } from "../queue/index.js";
+import { CardActions } from "./CardActions.js";
 import { KanaBack } from "./Flashcard.js";
 import { KanjiBack } from "./KanjiFlashcard.js";
 
@@ -19,6 +20,7 @@ import { KanjiBack } from "./KanjiFlashcard.js";
  */
 
 interface TypingShellProps {
+  cardId: string;
   kicker: string;
   source?: CardSource;
   /** Prompt besar (romaji / reading / SMALL TSU). */
@@ -37,6 +39,7 @@ interface TypingShellProps {
 }
 
 function TypingShell({
+  cardId,
   kicker,
   source,
   prompt,
@@ -115,6 +118,8 @@ function TypingShell({
         </div>
       </div>
 
+      <CardActions cardId={cardId} />
+
       {result && (
         <div>
           <div
@@ -171,6 +176,7 @@ export function TypingKanaCard({
   const scriptLabel = card.script === "hiragana" ? "Hiragana" : "Katakana";
   return (
     <TypingShell
+      cardId={card.id}
       kicker={`${scriptLabel} · ${index + 1} / ${total}`}
       source={source}
       prompt={prompt}
@@ -205,6 +211,7 @@ export function TypingKanjiCard({
 }) {
   return (
     <TypingShell
+      cardId={card.id}
       kicker={`Kanji ${card.level} · ${index + 1} / ${total}`}
       source={source}
       prompt={prompt}

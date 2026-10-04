@@ -632,3 +632,101 @@
   border-top: 1px solid var(--hairline);
   text-align: center;
 }
+
+/* ---- Card control (Phase 16) ---- */
+.card-actions {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  margin: 14px 0 4px;
+  min-height: 44px;
+  flex-wrap: wrap;
+}
+
+.card-action-btn {
+  min-height: 44px;
+  min-width: 44px;
+  padding: 8px 14px;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--ink-soft);
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.card-action-btn:hover {
+  color: var(--ink);
+  border-color: var(--hairline);
+}
+
+.card-action-btn.is-active {
+  color: var(--vermilion);
+}
+
+.card-action-btn.is-danger {
+  color: var(--vermilion);
+  border-color: var(--vermilion);
+}
+
+.card-action-confirm {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.card-action-confirm-text {
+  font-size: 14px;
+  color: var(--ink);
+}
+
+/* ---- Favorites toggle (Phase 16) ---- */
+.fav-toggle {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 14px 0 4px;
+  font-size: 15px;
+  cursor: pointer;
+  min-height: 44px;
+}
+
+.fav-toggle input {
+  width: 20px;
+  height: 20px;
+  accent-color: var(--vermilion);
+}
+
+/* ---- Favorites / Suspended lists (Phase 16) ---- */
+.meta-card-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.meta-card-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  border: 1px solid var(--hairline);
+  border-radius: 12px;
+  background: var(--paper);
+}
+
+.meta-card-char {
+  font-size: 28px;
+  min-width: 44px;
+  text-align: center;
+}
+
+.meta-card-sub {
+  flex: 1;
+  color: var(--ink-soft);
+  font-size: 14px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

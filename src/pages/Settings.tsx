@@ -139,6 +139,10 @@ export function SettingsPage() {
         <button className="btn" style={{ color: "var(--vermilion)", borderColor: "var(--vermilion)" }} onClick={doReset}>
           Reset progress
         </button>
+        <p style={{ color: "var(--ink-soft)", fontSize: 13, marginTop: 8 }}>
+          Reset menghapus progress belajar dan statistik harian.
+          Favorite dan Suspended tetap tersimpan.
+        </p>
       </div>
 
       <hr className="divider" />

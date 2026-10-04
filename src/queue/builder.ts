@@ -10,6 +10,7 @@ import type { KanaCard } from "../data/kana/index.js";
 import type { KanjiCard } from "../data/kanji/index.js";
 import type { CardProgress } from "../srs/types.js";
 import { isDue } from "../srs/types.js";
+import type { CardMeta } from "../storage/cardMeta.js";
 import type { StudyMode } from "../study/modes.js";
 import { buildSessionCard } from "../study/modes.js";
 import { classifySource } from "./classify.js";
@@ -41,10 +42,16 @@ export function buildQueue(args: {
   requested: number;
   limits: QueueLimits;
   daily: DailyCounts;
+  /** Metadata personal (Phase 16). Suspended selalu dikecualikan. */
+  cardMeta?: Record<string, CardMeta>;
+  /** Jika true: hanya kartu favorite yang masuk queue. */
+  favoriteOnly?: boolean;
   now?: Date;
 }): QueueResult {
   const { cards, progress, mode, requested, limits, daily } = args;
   const now = args.now ?? new Date();
+  const cardMeta = args.cardMeta ?? {};
+  const favoriteOnly = args.favoriteOnly ?? false;
 
   const learningDue: Scored[] = [];
   const reviewDue: Scored[] = [];
@@ -53,6 +60,11 @@ export function buildQueue(args: {
   let nextReviewMs = Infinity;
 
   for (const card of cards) {
+    const meta = cardMeta[card.id];
+    // Suspended: dikecualikan dari SEMUA queue. Progress SRS tidak disentuh.
+    if (meta?.suspended) continue;
+    // Favorite study: hanya kartu favorite.
+    if (favoriteOnly && !meta?.favorite) continue;
     const p = progress[card.id];
     const source = classifySource(p ?? null);
     if (source === "new") {

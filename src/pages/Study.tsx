@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import type { KanaCard, KanaScript, KanaSelection } from "../data/kana/index.js";
 import { selectKana, GROUP_LABELS, KANA_GROUPS } from "../data/kana/index.js";
 import type { KanjiCard, KanjiLevel } from "../data/kanji/index.js";
@@ -9,6 +9,7 @@ import { TypingKanaCard, TypingKanjiCard } from "../components/TypingFlashcard.j
 import type { Rating, CardProgress } from "../srs/types.js";
 import { rateCard } from "../srs/scheduler.js";
 import { loadProgress, saveProgress, recordReview, recordCardRated, loadSettings, getDailyCounts } from "../storage/progress.js";
+import { loadCardMeta } from "../storage/cardMeta.js";
 import type { StudyMode } from "../study/modes.js";
 import { MODE_LABELS } from "../study/modes.js";
 import { buildQueue, formatNextReview, classifySource } from "../queue/index.js";
@@ -35,6 +36,7 @@ export function Study() {
   const [kanjiLevel, setKanjiLevel] = useState<KanjiLevel>("N5");
   const [count, setCount] = useState<number>(() => loadSettings().defaultCards);
   const [studyMode, setStudyMode] = useState<StudyMode>("recognition");
+  const [favoritesOnly, setFavoritesOnly] = useState(false);
   const [sessionMode, setSessionMode] = useState<StudyMode>("recognition");
   const [queue, setQueue] = useState<QueueItem[]>([]);
   const [done, setDone] = useState(0);
@@ -45,6 +47,8 @@ export function Study() {
   const [ratingBreakdown, setRatingBreakdown] = useState({ again: 0, hard: 0, good: 0, easy: 0 });
   /** Statistik typing sesi ini (tidak disimpan permanen). */
   const [typingStats, setTypingStats] = useState({ correct: 0, wrong: 0 });
+  /** Menyimpan apakah sesi kosong berasal dari mode favorites-only. */
+  const favoritesOnlyRef = useRef(false);
 
   const candidatePool: Array<KanaCard | KanjiCard> =
     category === "kanji"
@@ -64,15 +68,18 @@ export function Study() {
           return { dailyNew: s.dailyNewLimit, dailyReview: s.dailyReviewLimit };
         })(),
         daily: getDailyCounts(),
+        cardMeta: loadCardMeta(),
+        favoriteOnly: favoritesOnly,
       }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [category, kanaGroup, kanjiLevel, studyMode, count],
+    [category, kanaGroup, kanjiLevel, studyMode, count, favoritesOnly],
   );
 
   const start = () => {
     // Smart queue: Learning due → Review due → New (dengan daily limits).
     // Mode dikunci untuk seluruh sesi; prompt recall dihitung sekali di sini.
     const settings = loadSettings();
+    favoritesOnlyRef.current = favoritesOnly;
     const result = buildQueue({
       cards: candidatePool,
       progress: loadProgress(),
@@ -80,6 +87,8 @@ export function Study() {
       requested: count,
       limits: { dailyNew: settings.dailyNewLimit, dailyReview: settings.dailyReviewLimit },
       daily: getDailyCounts(),
+      cardMeta: loadCardMeta(),
+      favoriteOnly: favoritesOnly,
     });
     if (result.cards.length === 0) {
       setEmptyNextReview(result.nextReviewAt);
@@ -233,6 +242,15 @@ export function Study() {
               : "Ketik karakter Jepang dari bacaan yang diberikan."}
         </p>
 
+        <label className="fav-toggle">
+          <input
+            type="checkbox"
+            checked={favoritesOnly}
+            onChange={(e) => setFavoritesOnly(e.target.checked)}
+          />
+          <span>★ Study favorites only</span>
+        </label>
+
         <button className="btn btn-primary" onClick={start}>Start Study</button>
         <p style={{ color: "var(--ink-soft)", fontSize: 14, marginTop: 14 }}>
           {queuePreview.cards.length === 0
@@ -247,12 +265,21 @@ export function Study() {
   }
 
   if (phase === "empty") {
+    const anyFavorite = Object.values(loadCardMeta()).some((m) => m.favorite);
     return (
       <div className="page" style={{ textAlign: "center" }}>
         <h1 className="page-title">Study</h1>
         <div className="summary-big" lang="ja">完</div>
-        <p style={{ fontSize: 18 }}>Semua sudah selesai.</p>
-        <p className="summary-line">Tidak ada kartu yang jatuh tempo saat ini.</p>
+        {favoritesOnlyRef.current && !anyFavorite ? (
+          <p style={{ fontSize: 18 }}>No favorite cards yet.</p>
+        ) : favoritesOnlyRef.current ? (
+          <p style={{ fontSize: 18 }}>No favorite cards are currently available.</p>
+        ) : (
+          <>
+            <p style={{ fontSize: 18 }}>Semua sudah selesai.</p>
+            <p className="summary-line">Tidak ada kartu yang jatuh tempo saat ini.</p>
+          </>
+        )}
         {emptyNextReview && (
           <p className="summary-line">
             Review berikutnya: {formatNextReview(emptyNextReview)}
