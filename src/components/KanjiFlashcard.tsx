@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { KanjiCard } from "../data/kanji/index.js";
 import type { Rating } from "../srs/types.js";
 import { AudioButton } from "./AudioButton.js";
@@ -35,11 +35,22 @@ export function KanjiFlashcard({
   const audioAvailable = useJapaneseAudioAvailable();
   const audioActions = getKanjiAudioActions(card);
   const audioById = (id: string) => audioActions.find((a) => a.id === id);
+  /** Guard ref (sinkron) agar rapid double-click hanya dihitung sekali. */
+  const ratedRef = useRef(false);
 
   // Hentikan speech saat pindah kartu / keluar sesi (komponen unmount tiap kartu).
-  useEffect(() => () => stopSpeaking(), []);
+  useEffect(() => {
+    ratedRef.current = false;
+    return () => stopSpeaking();
+  }, []);
 
   const reveal = () => setRevealed(true);
+
+  const handleRate = (rating: Rating) => {
+    if (ratedRef.current) return;
+    ratedRef.current = true;
+    onRate(rating);
+  };
   const kicker = `Kanji ${card.level} · ${index + 1} / ${total}`;
 
   return (
@@ -139,10 +150,10 @@ export function KanjiFlashcard({
 
       {revealed && (
         <div className="rating-grid" role="group" aria-label="Nilai hafalan">
-          <button className="rating-btn again" onClick={() => onRate("again")}>Again</button>
-          <button className="rating-btn hard" onClick={() => onRate("hard")}>Hard</button>
-          <button className="rating-btn good" onClick={() => onRate("good")}>Good</button>
-          <button className="rating-btn easy" onClick={() => onRate("easy")}>Easy</button>
+          <button className="rating-btn again" onClick={() => handleRate("again")}>Again</button>
+          <button className="rating-btn hard" onClick={() => handleRate("hard")}>Hard</button>
+          <button className="rating-btn good" onClick={() => handleRate("good")}>Good</button>
+          <button className="rating-btn easy" onClick={() => handleRate("easy")}>Easy</button>
         </div>
       )}
     </div>

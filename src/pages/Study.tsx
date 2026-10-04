@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import type { KanaCard, KanaScript, KanaSelection } from "../data/kana/index.js";
 import { selectKana, GROUP_LABELS, KANA_GROUPS } from "../data/kana/index.js";
 import type { KanjiCard, KanjiLevel } from "../data/kanji/index.js";
@@ -40,24 +40,31 @@ export function Study() {
   const [total, setTotal] = useState(0);
   const [againCards, setAgainCards] = useState<Set<string>>(new Set());
   const [emptyNextReview, setEmptyNextReview] = useState<string | null>(null);
+  /** Breakdown rating sesi ini (tidak disimpan permanen). */
+  const [ratingBreakdown, setRatingBreakdown] = useState({ again: 0, hard: 0, good: 0, easy: 0 });
 
   const candidatePool: Array<KanaCard | KanjiCard> =
     category === "kanji"
       ? selectKanji(kanjiLevel)
       : selectKana(category as KanaScript, kanaGroup);
 
-  /** Preview queue untuk setup — dihitung saat render (satu pass, murah). */
-  const queuePreview = buildQueue({
-    cards: candidatePool,
-    progress: loadProgress(),
-    mode: studyMode,
-    requested: count,
-    limits: (() => {
-      const s = loadSettings();
-      return { dailyNew: s.dailyNewLimit, dailyReview: s.dailyReviewLimit };
-    })(),
-    daily: getDailyCounts(),
-  });
+  /** Preview queue untuk setup — dihitung ulang hanya saat input setup berubah. */
+  const queuePreview = useMemo(
+    () =>
+      buildQueue({
+        cards: candidatePool,
+        progress: loadProgress(),
+        mode: studyMode,
+        requested: count,
+        limits: (() => {
+          const s = loadSettings();
+          return { dailyNew: s.dailyNewLimit, dailyReview: s.dailyReviewLimit };
+        })(),
+        daily: getDailyCounts(),
+      }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [category, kanaGroup, kanjiLevel, studyMode, count],
+  );
 
   const start = () => {
     // Smart queue: Learning due → Review due → New (dengan daily limits).
@@ -88,6 +95,7 @@ export function Study() {
     setTotal(result.cards.length);
     setDone(0);
     setAgainCards(new Set());
+    setRatingBreakdown({ again: 0, hard: 0, good: 0, easy: 0 });
     setPhase("session");
   };
 
@@ -104,6 +112,7 @@ export function Study() {
     recordReview(rating);
     // Counter harian berdasarkan kategori saat dinilai (bukan saat masuk queue).
     recordCardRated(head.source);
+    setRatingBreakdown((prev) => ({ ...prev, [rating]: prev[rating] + 1 }));
 
     if (rating === "again") {
       setAgainCards((prev) => new Set(prev).add(head.card.id));
@@ -212,7 +221,7 @@ export function Study() {
             : "Lihat bacaan, ingat karakter Jepangnya."}
         </p>
 
-        <button className="btn btn-primary" onClick={start}>Start</button>
+        <button className="btn btn-primary" onClick={start}>Start Study</button>
         <p style={{ color: "var(--ink-soft)", fontSize: 14, marginTop: 14 }}>
           {queuePreview.cards.length === 0
             ? "Tidak ada kartu yang jatuh tempo saat ini."
@@ -245,11 +254,21 @@ export function Study() {
   }
 
   if (phase === "done") {
+    const rb = ratingBreakdown;
+    const breakdownParts = [
+      rb.good > 0 ? `Good ${rb.good}` : null,
+      rb.easy > 0 ? `Easy ${rb.easy}` : null,
+      rb.hard > 0 ? `Hard ${rb.hard}` : null,
+      rb.again > 0 ? `Again ${rb.again}` : null,
+    ].filter(Boolean);
     return (
       <div className="page" style={{ textAlign: "center" }}>
         <h1 className="page-title">Session Complete</h1>
         <div className="summary-big" lang="ja">終</div>
         <p style={{ fontSize: 18 }}>{done} kartu selesai direview.</p>
+        {breakdownParts.length > 0 && (
+          <p className="summary-line">{breakdownParts.join(" · ")}</p>
+        )}
         <p className="summary-line">
           Mode: {MODE_LABELS[sessionMode]}
           {againCards.size > 0 && ` · ${againCards.size} kartu perlu diulang`}
@@ -267,10 +286,8 @@ export function Study() {
 
   const sessionLabel =
     category === "kanji"
-      ? `Kanji · ${kanjiLevel}`
-      : `${category === "hiragana" ? "Hiragana" : "Katakana"} · ${
-          kanaGroup === "all" ? "All Kana" : GROUP_LABELS[kanaGroup as keyof typeof GROUP_LABELS]
-        }`;
+      ? `Kanji ${kanjiLevel} · ${MODE_LABELS[sessionMode]}`
+      : `${category === "hiragana" ? "Hiragana" : "Katakana"} · ${MODE_LABELS[sessionMode]}${kanaGroup === "all" ? "" : ` · ${GROUP_LABELS[kanaGroup as keyof typeof GROUP_LABELS]}`}`;
 
   return (
     <div className="page">

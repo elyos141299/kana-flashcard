@@ -65,6 +65,12 @@ export function Progress() {
         <span>Learning</span>
         <span className="stat-val">{daily.learningCards}</span>
       </div>
+      {(daily.newCards >= settings.dailyNewLimit ||
+        (settings.dailyReviewLimit > 0 && daily.reviewCards >= settings.dailyReviewLimit)) && (
+        <p style={{ color: "var(--ink-soft)", fontSize: 13, marginTop: 8 }}>
+          Limit harian tercapai — kartu berikutnya tersedia besok.
+        </p>
+      )}
 
       <hr className="divider" />
 
