@@ -37,10 +37,14 @@ export function SettingsPage() {
     const reader = new FileReader();
     reader.onload = () => {
       try {
-        importAll(String(reader.result));
-        alert("Data berhasil diimport. Refresh halaman.");
-      } catch {
-        alert("File tidak valid.");
+        const result = importAll(String(reader.result));
+        const orphanInfo =
+          result.orphanedProgress + result.orphanedMeta > 0
+            ? ` (${result.orphanedProgress + result.orphanedMeta} data lama tidak dikenali, tetap disimpan)`
+            : "";
+        alert(`Data berhasil diimport.${orphanInfo} Refresh halaman.`);
+      } catch (e) {
+        alert(e instanceof Error ? e.message : "File tidak valid.");
       }
     };
     reader.readAsText(file);

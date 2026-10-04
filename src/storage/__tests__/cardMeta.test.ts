@@ -264,9 +264,13 @@ describe("export/import", () => {
   it("metadata malformed ditolak — data lama tetap utuh", () => {
     const id = cards[0].id;
     toggleFavorite(id);
-    importAll(JSON.stringify({ cardMetadata: { [id]: { favorite: "yes" } } }));
+    expect(() =>
+      importAll(JSON.stringify({ cardMetadata: { [id]: { favorite: "yes" } } })),
+    ).toThrow();
     expect(getCardMeta(id).favorite).toBe(true);
-    importAll(JSON.stringify({ cardMetadata: "bukan-object" }));
+    expect(() =>
+      importAll(JSON.stringify({ cardMetadata: "bukan-object" })),
+    ).toThrow();
     expect(getCardMeta(id).favorite).toBe(true);
   });
 

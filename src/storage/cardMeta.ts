@@ -7,14 +7,12 @@
  *
  * Reset Progress TIDAK menghapus metadata ini.
  */
-import { read, write } from "./progress.js";
+import { read, write, META_KEY } from "./kv.js";
 
 export interface CardMeta {
   favorite: boolean;
   suspended: boolean;
 }
-
-const META_KEY = "kana.cardmeta.v1";
 
 const EMPTY: CardMeta = { favorite: false, suspended: false };
 

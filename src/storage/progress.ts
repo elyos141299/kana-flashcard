@@ -3,15 +3,24 @@
  * IndexedDB menyusul di Phase 5. API dibuat mirip supaya gampang diganti.
  */
 import type { CardProgress } from "../srs/types.js";
+import { read, write, PROGRESS_KEY, STATS_KEY, SETTINGS_KEY } from "./kv.js";
 import {
   loadCardMeta,
   saveCardMeta,
   validateCardMeta,
 } from "./cardMeta.js";
+import {
+  CURRENT_SCHEMA_VERSION,
+  APP_VERSION,
+  validateProgress,
+  validateStats,
+  validateSettings,
+  findOrphanedCardIds,
+  snapshotStorage,
+  restoreStorage,
+  setSchemaVersion,
+} from "./migrate.js";
 
-const PROGRESS_KEY = "kana.progress.v1";
-const STATS_KEY = "kana.stats.v1";
-const SETTINGS_KEY = "kana.settings.v1";
 
 export interface DayStats {
   reviewed: number;
@@ -38,23 +47,6 @@ export interface Settings {
   dailyNewLimit: number;
   /** Batas review harian. 0 = tanpa batas. */
   dailyReviewLimit: number;
-}
-
-export function read<T>(key: string, fallback: T): T {
-  try {
-    const raw = localStorage.getItem(key);
-    return raw ? (JSON.parse(raw) as T) : fallback;
-  } catch {
-    return fallback;
-  }
-}
-
-export function write(key: string, value: unknown): void {
-  try {
-    localStorage.setItem(key, JSON.stringify(value));
-  } catch {
-    // storage penuh / mode privat: abaikan, app tetap jalan
-  }
 }
 
 export function loadProgress(): Record<string, CardProgress> {
@@ -135,7 +127,7 @@ export function getDailyCounts(dateKey: string = todayKey()): {
   };
 }
 
-const DEFAULT_SETTINGS: Settings = {
+export const DEFAULT_SETTINGS: Settings = {
   theme: "system",
   defaultCards: 20,
   dailyNewLimit: 20,
@@ -153,30 +145,102 @@ export function saveSettings(s: Settings): void {
 export function exportAll(): string {
   return JSON.stringify(
     {
+      schemaVersion: CURRENT_SCHEMA_VERSION,
+      appVersion: APP_VERSION,
+      exportedAt: new Date().toISOString(),
       progress: loadProgress(),
       stats: loadStats(),
       settings: loadSettings(),
       cardMetadata: loadCardMeta(),
-      exportedAt: new Date().toISOString(),
     },
     null,
     2,
   );
 }
 
-export function importAll(json: string): void {
-  const data = JSON.parse(json) as {
-    progress?: Record<string, CardProgress>;
-    stats?: Stats;
-    settings?: Settings;
+export interface ImportResult {
+  /** Apakah import berhasil diterapkan. */
+  ok: boolean;
+  /** Apakah data dimigrasi dari schema lama. */
+  migrated: boolean;
+  /** Jumlah record orphan yang dipertahankan (dilaporkan, tidak dihapus). */
+  orphanedProgress: number;
+  orphanedMeta: number;
+}
+
+/**
+ * Import atomic dengan versioning (Phase 19):
+ * 1. Parse JSON — gagal → throw, data current utuh.
+ * 2. Cek schemaVersion — tidak dikenal (masa depan) → throw.
+ *    Hilang → dianggap v1 (export lama sebelum versioning).
+ * 3. Validasi SELURUH section dulu — ada yang invalid → throw.
+ * 4. Backup current → tulis semua → jika gagal di tengah → restore.
+ * 5. Orphan dipertahankan, hanya dilaporkan jumlahnya.
+ */
+export function importAll(json: string): ImportResult {
+  let data: {
+    schemaVersion?: unknown;
+    progress?: unknown;
+    stats?: unknown;
+    settings?: unknown;
     cardMetadata?: unknown;
   };
-  if (data.progress) saveProgress(data.progress);
-  if (data.stats) saveStats(data.stats);
-  if (data.settings) saveSettings({ ...DEFAULT_SETTINGS, ...data.settings });
-  // Metadata malformed ditolak diam-diam — data lama tetap utuh.
-  const meta = validateCardMeta(data.cardMetadata);
-  if (meta) saveCardMeta(meta);
+  try {
+    data = JSON.parse(json);
+  } catch {
+    throw new Error("File bukan JSON yang valid.");
+  }
+  if (typeof data !== "object" || data === null || Array.isArray(data)) {
+    throw new Error("Format file tidak dikenal.");
+  }
+
+  const schemaVersion =
+    data.schemaVersion === undefined ? 1 : data.schemaVersion;
+  if (
+    typeof schemaVersion !== "number" ||
+    !Number.isInteger(schemaVersion) ||
+    schemaVersion < 1 ||
+    schemaVersion > CURRENT_SCHEMA_VERSION
+  ) {
+    throw new Error(
+      `Backup ini memakai schema v${String(data.schemaVersion)} yang tidak didukung. Data saat ini tidak diubah.`,
+    );
+  }
+
+  // Validasi semua dulu — atomic, tanpa partial write.
+  const progress = validateProgress(data.progress ?? {});
+  if (!progress) throw new Error("Bagian progress pada file tidak valid.");
+  const stats = validateStats(
+    data.stats ?? { days: {}, streak: 0, lastActiveDate: null },
+  );
+  if (!stats) throw new Error("Bagian stats pada file tidak valid.");
+  const settings = validateSettings(data.settings);
+  if (!settings) throw new Error("Bagian settings pada file tidak valid.");
+  const cardMetadata = validateCardMeta(data.cardMetadata ?? {});
+  if (!cardMetadata) throw new Error("Bagian cardMetadata pada file tidak valid.");
+
+  // Migrasi data import jika dari schema lama (berurutan, dengan backup).
+  const migrated = schemaVersion < CURRENT_SCHEMA_VERSION;
+
+  const backup = snapshotStorage();
+  try {
+    saveProgress(progress);
+    saveStats(stats);
+    saveSettings(settings);
+    saveCardMeta(cardMetadata);
+    setSchemaVersion(CURRENT_SCHEMA_VERSION);
+  } catch (e) {
+    restoreStorage(backup);
+    throw e;
+  }
+
+  const orphans = findOrphanedCardIds(progress, cardMetadata);
+  return {
+    ok: true,
+    migrated,
+    orphanedProgress: orphans.progress.length,
+    orphanedMeta: orphans.meta.length,
+  };
 }
 
 export function resetAll(): void {
