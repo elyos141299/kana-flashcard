@@ -1,6 +1,9 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { KanjiCard } from "../data/kanji/index.js";
 import type { Rating } from "../srs/types.js";
+import { AudioButton } from "./AudioButton.js";
+import { getKanjiAudioActions, stopSpeaking } from "../audio/index.js";
+import { useJapaneseAudioAvailable } from "../audio/useJapaneseAudio.js";
 
 /**
  * Flashcard Kanji: depan hanya karakter; belakang = reading + meaning + examples.
@@ -18,6 +21,12 @@ export function KanjiFlashcard({
   onRate: (rating: Rating) => void;
 }) {
   const [revealed, setRevealed] = useState(false);
+  const audioAvailable = useJapaneseAudioAvailable();
+  const audioActions = getKanjiAudioActions(card);
+  const audioById = (id: string) => audioActions.find((a) => a.id === id);
+
+  // Hentikan speech saat pindah kartu / keluar sesi (komponen unmount tiap kartu).
+  useEffect(() => () => stopSpeaking(), []);
 
   const reveal = () => setRevealed(true);
   const kicker = `Kanji ${card.level} · ${index + 1} / ${total}`;
@@ -53,15 +62,33 @@ export function KanjiFlashcard({
                   <div className="kanji-reading-row">
                     <span className="kanji-reading-tag">ON</span>
                     <span>{card.onyomi.join("・")}</span>
+                    {audioAvailable && audioById("on") && (
+                      <AudioButton
+                        size="sm"
+                        text={audioById("on")!.text}
+                        label={audioById("on")!.label}
+                      />
+                    )}
                   </div>
                 )}
                 {card.kunyomi.length > 0 && (
                   <div className="kanji-reading-row">
                     <span className="kanji-reading-tag">KUN</span>
                     <span>{card.kunyomi.join("・")}</span>
+                    {audioAvailable && audioById("kun") && (
+                      <AudioButton
+                        size="sm"
+                        text={audioById("kun")!.text}
+                        label={audioById("kun")!.label}
+                      />
+                    )}
                   </div>
                 )}
               </div>
+            )}
+
+            {!audioAvailable && (
+              <p className="audio-note">🔇 Suara Jepang tidak tersedia di perangkat ini.</p>
             )}
 
             <div className="kanji-meanings">
@@ -70,15 +97,21 @@ export function KanjiFlashcard({
 
             {card.examples.length > 0 && (
               <div className="kanji-examples">
-                {card.examples.slice(0, 3).map((ex, i) => (
-                  <div className="kanji-example-row" key={i}>
-                    <span lang="ja" className="kanji-example-word">
-                      {ex.word}
-                      <span className="kanji-example-reading"> {ex.reading}</span>
-                    </span>
-                    <span className="kanji-example-meaning">{ex.meaning}</span>
-                  </div>
-                ))}
+                {card.examples.slice(0, 3).map((ex, i) => {
+                  const action = audioById(`ex-${i}`);
+                  return (
+                    <div className="kanji-example-row" key={i}>
+                      <span lang="ja" className="kanji-example-word">
+                        {ex.word}
+                        <span className="kanji-example-reading"> {ex.reading}</span>
+                      </span>
+                      <span className="kanji-example-meaning">{ex.meaning}</span>
+                      {audioAvailable && action && (
+                        <AudioButton size="sm" text={action.text} label={action.label} />
+                      )}
+                    </div>
+                  );
+                })}
               </div>
             )}
           </div>

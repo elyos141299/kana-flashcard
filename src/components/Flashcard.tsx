@@ -1,6 +1,9 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { KanaCard } from "../data/kana/index.js";
 import type { Rating } from "../srs/types.js";
+import { AudioButton } from "./AudioButton.js";
+import { getKanaAudioActions, stopSpeaking } from "../audio/index.js";
+import { useJapaneseAudioAvailable } from "../audio/useJapaneseAudio.js";
 
 /**
  * Kartu flashcard: tap untuk reveal (flip), lalu nilai Again/Hard/Good/Easy.
@@ -17,6 +20,11 @@ export function Flashcard({
   onRate: (rating: Rating) => void;
 }) {
   const [revealed, setRevealed] = useState(false);
+  const audioAvailable = useJapaneseAudioAvailable();
+  const [kanaAudio] = getKanaAudioActions(card);
+
+  // Hentikan speech saat pindah kartu / keluar sesi (komponen unmount tiap kartu).
+  useEffect(() => () => stopSpeaking(), []);
 
   const reveal = () => setRevealed(true);
   const kicker = `${card.script === "hiragana" ? "Hiragana" : "Katakana"} · ${index + 1} / ${total}`;
@@ -49,6 +57,11 @@ export function Flashcard({
               <div className="card-reading">{card.romaji.toUpperCase()}</div>
             ) : (
               <div className="card-note" lang="id">{card.note}</div>
+            )}
+            {audioAvailable ? (
+              <AudioButton text={kanaAudio.text} label={kanaAudio.label} />
+            ) : (
+              <p className="audio-note">🔇 Suara Jepang tidak tersedia di perangkat ini.</p>
             )}
             {card.example && (
               <div className="card-example" lang="ja">

@@ -79,6 +79,41 @@
   outline-offset: 2px;
 }
 
+/* Tombol audio TTS — kecil, tenang, tidak mengalahkan karakter */
+.audio-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 44px;
+  padding: 6px 14px;
+  border: 1px solid var(--hairline);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--ink-soft);
+  font-family: var(--font);
+  font-size: 13px;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+.audio-btn-sm {
+  min-height: 36px;
+  padding: 4px 10px;
+  font-size: 12px;
+}
+.audio-btn:hover {
+  border-color: var(--indigo);
+  color: var(--ink);
+}
+.audio-btn.is-playing {
+  color: var(--vermilion);
+  border-color: var(--vermilion);
+}
+.audio-note {
+  color: var(--ink-soft);
+  font-size: 12px;
+  margin: 8px 0 0;
+}
+
 .btn-primary:active {
   background: var(--vermilion-deep);
 }
