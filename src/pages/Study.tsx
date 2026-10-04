@@ -488,6 +488,9 @@ export function Study() {
   const current = queue[0];
   if (!current) return null;
 
+  const isKanaSession = !mixedSessionRef.current && (category === "hiragana" || category === "katakana");
+  const kanaScript = category === "hiragana" ? "hiragana" : "katakana";
+
   const sessionLabel = mixedSessionRef.current
     ? `Mixed Study · ${MODE_LABELS[sessionMode]}`
     : category === "kanji"
@@ -499,7 +502,20 @@ export function Study() {
   return (
     <div className="page">
       <div className="session-top">
-        <span>{sessionLabel}</span>
+        {isKanaSession ? (
+          <span
+            className={`script-badge script-${kanaScript}`}
+            role="status"
+            aria-label={kanaScript === "hiragana" ? "Mode Hiragana" : "Mode Katakana"}
+          >
+            <span className="script-badge-glyph" aria-hidden="true">
+              {kanaScript === "hiragana" ? "ひ" : "カ"}
+            </span>
+            <span className="script-badge-text">{sessionLabel}</span>
+          </span>
+        ) : (
+          <span>{sessionLabel}</span>
+        )}
         <button className="link-btn" onClick={() => setPhase("setup")}>Akhiri</button>
       </div>
       {current.card.type === "vocabulary" ? (
