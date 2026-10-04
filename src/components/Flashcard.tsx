@@ -5,6 +5,8 @@ import { AudioButton } from "./AudioButton.js";
 import { getKanaAudioActions, stopSpeaking } from "../audio/index.js";
 import { useJapaneseAudioAvailable } from "../audio/useJapaneseAudio.js";
 import type { StudyMode } from "../study/modes.js";
+import type { CardSource } from "../queue/index.js";
+import { SOURCE_LABELS } from "../queue/index.js";
 
 /**
  * Kartu flashcard: tap untuk reveal (flip), lalu nilai Again/Hard/Good/Easy.
@@ -17,6 +19,7 @@ export function Flashcard({
   total,
   mode = "recognition",
   prompt,
+  source,
   onRate,
 }: {
   card: KanaCard;
@@ -24,6 +27,7 @@ export function Flashcard({
   total: number;
   mode?: StudyMode;
   prompt?: string;
+  source?: CardSource;
   onRate: (rating: Rating) => void;
 }) {
   const [revealed, setRevealed] = useState(false);
@@ -54,6 +58,7 @@ export function Flashcard({
         >
           <div className="card-face card-front">
             <div className="card-kicker">{kicker}</div>
+            {source && <div className="card-source">{SOURCE_LABELS[source]}</div>}
             {mode === "recall" && prompt ? (
               <>
                 <div className="card-recall-tag">Recall</div>

@@ -14,6 +14,10 @@ export interface DayStats {
   hard: number;
   good: number;
   easy: number;
+  /** Counter harian per kategori kartu (Phase 12). */
+  newCards: number;
+  reviewCards: number;
+  learningCards: number;
 }
 
 export interface Stats {
@@ -27,6 +31,8 @@ export interface Settings {
   theme: "light" | "dark" | "system";
   defaultCards: number;
   dailyNewLimit: number;
+  /** Batas review harian. 0 = tanpa batas. */
+  dailyReviewLimit: number;
 }
 
 function read<T>(key: string, fallback: T): T {
@@ -55,7 +61,7 @@ export function saveProgress(map: Record<string, CardProgress>): void {
 }
 
 export function emptyDay(): DayStats {
-  return { reviewed: 0, again: 0, hard: 0, good: 0, easy: 0 };
+  return { reviewed: 0, again: 0, hard: 0, good: 0, easy: 0, newCards: 0, reviewCards: 0, learningCards: 0 };
 }
 
 export function loadStats(): Stats {
@@ -93,10 +99,42 @@ export function recordReview(rating: "again" | "hard" | "good" | "easy"): Stats 
   return stats;
 }
 
+/**
+ * Catat satu kartu yang benar-benar dinilai, berdasarkan kategorinya
+ * saat dinilai (new / learning / review). Dipanggil bersamaan dengan
+ * recordReview di handleRate — bukan saat kartu masuk queue.
+ */
+export function recordCardRated(source: "new" | "learning" | "review"): Stats {
+  const stats = loadStats();
+  const key = todayKey();
+  const day = stats.days[key] ?? emptyDay();
+  if (source === "new") day.newCards = (day.newCards ?? 0) + 1;
+  else if (source === "review") day.reviewCards = (day.reviewCards ?? 0) + 1;
+  else day.learningCards = (day.learningCards ?? 0) + 1;
+  stats.days[key] = day;
+  saveStats(stats);
+  return stats;
+}
+
+/** Counter harian untuk tanggal lokal tertentu (default: hari ini). */
+export function getDailyCounts(dateKey: string = todayKey()): {
+  newCards: number;
+  reviewCards: number;
+  learningCards: number;
+} {
+  const day = loadStats().days[dateKey];
+  return {
+    newCards: day?.newCards ?? 0,
+    reviewCards: day?.reviewCards ?? 0,
+    learningCards: day?.learningCards ?? 0,
+  };
+}
+
 const DEFAULT_SETTINGS: Settings = {
   theme: "system",
   defaultCards: 20,
   dailyNewLimit: 20,
+  dailyReviewLimit: 100,
 };
 
 export function loadSettings(): Settings {

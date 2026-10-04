@@ -82,6 +82,43 @@ export function SettingsPage() {
           ))}
         </span>
       </div>
+      <div className="stat-row">
+        <span>Daily new cards</span>
+        <span>
+          {[10, 20, 30, 50, 100].map((n) => (
+            <button
+              key={n}
+              className="link-btn"
+              style={{ fontWeight: settings.dailyNewLimit === n ? 700 : 400, color: settings.dailyNewLimit === n ? "var(--vermilion)" : undefined }}
+              onClick={() => update({ dailyNewLimit: n })}
+            >
+              {n}
+            </button>
+          ))}
+        </span>
+      </div>
+      <div className="stat-row">
+        <span>Daily reviews</span>
+        <span>
+          {[50, 100, 200].map((n) => (
+            <button
+              key={n}
+              className="link-btn"
+              style={{ fontWeight: settings.dailyReviewLimit === n ? 700 : 400, color: settings.dailyReviewLimit === n ? "var(--vermilion)" : undefined }}
+              onClick={() => update({ dailyReviewLimit: n })}
+            >
+              {n}
+            </button>
+          ))}
+          <button
+            className="link-btn"
+            style={{ fontWeight: settings.dailyReviewLimit === 0 ? 700 : 400, color: settings.dailyReviewLimit === 0 ? "var(--vermilion)" : undefined }}
+            onClick={() => update({ dailyReviewLimit: 0 })}
+          >
+            No limit
+          </button>
+        </span>
+      </div>
 
       <hr className="divider" />
 

@@ -168,6 +168,15 @@
   margin-bottom: 4px;
 }
 
+/* Label kecil sumber kartu (New / Learning / Review) — tidak dominan */
+.card-source {
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  margin-top: 2px;
+}
+
 /* Baris ringkasan sesi */
 .summary-line {
   color: var(--ink-soft);

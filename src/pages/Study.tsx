@@ -2,21 +2,24 @@ import { useState } from "react";
 import type { KanaCard, KanaScript, KanaSelection } from "../data/kana/index.js";
 import { selectKana, GROUP_LABELS, KANA_GROUPS } from "../data/kana/index.js";
 import type { KanjiCard, KanjiLevel } from "../data/kanji/index.js";
-import { selectKanji, countKanji } from "../data/kanji/index.js";
+import { selectKanji } from "../data/kanji/index.js";
 import { Flashcard } from "../components/Flashcard.js";
 import { KanjiFlashcard } from "../components/KanjiFlashcard.js";
 import type { Rating, CardProgress } from "../srs/types.js";
 import { rateCard } from "../srs/scheduler.js";
-import { loadProgress, saveProgress, recordReview, loadSettings } from "../storage/progress.js";
+import { loadProgress, saveProgress, recordReview, recordCardRated, loadSettings, getDailyCounts } from "../storage/progress.js";
 import type { StudyMode } from "../study/modes.js";
-import { buildSessionCard, MODE_LABELS } from "../study/modes.js";
+import { MODE_LABELS } from "../study/modes.js";
+import { buildQueue, formatNextReview, classifySource } from "../queue/index.js";
+import type { CardSource } from "../queue/index.js";
 
-type Phase = "setup" | "session" | "done";
+type Phase = "setup" | "session" | "done" | "empty";
 type Category = "hiragana" | "katakana" | "kanji";
 
 interface QueueItem {
   card: KanaCard | KanjiCard;
   requeues: number;
+  source: CardSource;
   /** Prompt recall (romaji/reading). Undefined untuk recognition. */
   prompt?: string;
 }
@@ -36,27 +39,53 @@ export function Study() {
   const [done, setDone] = useState(0);
   const [total, setTotal] = useState(0);
   const [againCards, setAgainCards] = useState<Set<string>>(new Set());
+  const [emptyNextReview, setEmptyNextReview] = useState<string | null>(null);
 
-  const availableCount =
+  const candidatePool: Array<KanaCard | KanjiCard> =
     category === "kanji"
-      ? countKanji(kanjiLevel)
-      : selectKana(category as KanaScript, kanaGroup).length;
+      ? selectKanji(kanjiLevel)
+      : selectKana(category as KanaScript, kanaGroup);
+
+  /** Preview queue untuk setup — dihitung saat render (satu pass, murah). */
+  const queuePreview = buildQueue({
+    cards: candidatePool,
+    progress: loadProgress(),
+    mode: studyMode,
+    requested: count,
+    limits: (() => {
+      const s = loadSettings();
+      return { dailyNew: s.dailyNewLimit, dailyReview: s.dailyReviewLimit };
+    })(),
+    daily: getDailyCounts(),
+  });
 
   const start = () => {
-    // Urutan deterministic sesuai dataset; SRS yang sama untuk kana & kanji.
+    // Smart queue: Learning due → Review due → New (dengan daily limits).
     // Mode dikunci untuk seluruh sesi; prompt recall dihitung sekali di sini.
-    const cards: Array<KanaCard | KanjiCard> =
-      category === "kanji"
-        ? selectKanji(kanjiLevel).slice(0, count)
-        : selectKana(category as KanaScript, kanaGroup).slice(0, count);
+    const settings = loadSettings();
+    const result = buildQueue({
+      cards: candidatePool,
+      progress: loadProgress(),
+      mode: studyMode,
+      requested: count,
+      limits: { dailyNew: settings.dailyNewLimit, dailyReview: settings.dailyReviewLimit },
+      daily: getDailyCounts(),
+    });
+    if (result.cards.length === 0) {
+      setEmptyNextReview(result.nextReviewAt);
+      setPhase("empty");
+      return;
+    }
     setSessionMode(studyMode);
     setQueue(
-      cards.map((card) => {
-        const sc = buildSessionCard(card, studyMode);
-        return { card: sc.card, requeues: 0, prompt: sc.prompt };
-      }),
+      result.cards.map((qc) => ({
+        card: qc.card,
+        requeues: 0,
+        source: qc.source,
+        prompt: qc.prompt,
+      })),
     );
-    setTotal(cards.length);
+    setTotal(result.cards.length);
     setDone(0);
     setAgainCards(new Set());
     setPhase("session");
@@ -73,16 +102,22 @@ export function Study() {
     store[head.card.id] = next;
     saveProgress(store);
     recordReview(rating);
+    // Counter harian berdasarkan kategori saat dinilai (bukan saat masuk queue).
+    recordCardRated(head.source);
 
     if (rating === "again") {
       setAgainCards((prev) => new Set(prev).add(head.card.id));
     }
 
-    // Again: kartu masuk lagi di akhir antrian (maks 2x per sesi, §14)
+    // Again: kartu masuk lagi di akhir antrian (maks 2x per sesi, §14).
     // Prompt recall ikut terbawa agar konsisten.
+    // §20: setelah rating, kartu diperlakukan sebagai LEARNING.
     let newQueue = rest;
     if (rating === "again" && head.requeues < 2) {
-      newQueue = [...rest, { card: head.card, requeues: head.requeues + 1, prompt: head.prompt }];
+      newQueue = [
+        ...rest,
+        { card: head.card, requeues: head.requeues + 1, prompt: head.prompt, source: classifySource(next) },
+      ];
     }
 
     const newDone = done + 1;
@@ -179,8 +214,32 @@ export function Study() {
 
         <button className="btn btn-primary" onClick={start}>Start</button>
         <p style={{ color: "var(--ink-soft)", fontSize: 14, marginTop: 14 }}>
-          {Math.min(count, availableCount)} dari {availableCount} kartu tersedia.
+          {queuePreview.cards.length === 0
+            ? "Tidak ada kartu yang jatuh tempo saat ini."
+            : `${queuePreview.cards.length} kartu: ` +
+              `${queuePreview.counts.learningDue} learning due · ` +
+              `${queuePreview.cards.filter((c) => c.source === "review").length} review · ` +
+              `${queuePreview.cards.filter((c) => c.source === "new").length} baru`}
         </p>
+      </div>
+    );
+  }
+
+  if (phase === "empty") {
+    return (
+      <div className="page" style={{ textAlign: "center" }}>
+        <h1 className="page-title">Study</h1>
+        <div className="summary-big" lang="ja">完</div>
+        <p style={{ fontSize: 18 }}>Semua sudah selesai.</p>
+        <p className="summary-line">Tidak ada kartu yang jatuh tempo saat ini.</p>
+        {emptyNextReview && (
+          <p className="summary-line">
+            Review berikutnya: {formatNextReview(emptyNextReview)}
+          </p>
+        )}
+        <div className="btn-row">
+          <button className="btn btn-primary" onClick={() => setPhase("setup")}>Kembali</button>
+        </div>
       </div>
     );
   }
@@ -227,6 +286,7 @@ export function Study() {
           total={total}
           mode={sessionMode}
           prompt={current.prompt}
+          source={current.source}
           onRate={handleRate}
         />
       ) : (
@@ -237,6 +297,7 @@ export function Study() {
           total={total}
           mode={sessionMode}
           prompt={current.prompt}
+          source={current.source}
           onRate={handleRate}
         />
       )}

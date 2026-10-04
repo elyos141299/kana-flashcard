@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { loadProgress, loadStats, todayKey } from "../storage/progress.js";
+import { loadProgress, loadSettings, loadStats, todayKey, getDailyCounts } from "../storage/progress.js";
 import type { KanaScript } from "../data/kana/index.js";
 import { selectKana, GROUP_LABELS, KANA_GROUPS } from "../data/kana/index.js";
 import { selectKanji, countKanji } from "../data/kanji/index.js";
@@ -42,13 +42,32 @@ function ScriptBlock({ script, progress }: {
 export function Progress() {
   const [stats] = useState(loadStats);
   const [progress] = useState(loadProgress);
+  const [settings] = useState(loadSettings);
   const today = stats.days[todayKey()];
+  const daily = getDailyCounts();
 
   return (
     <div className="page">
       <h1 className="page-title">Progress</h1>
 
       <p className="section-label">Today</p>
+      <div className="stat-row">
+        <span>New</span>
+        <span className="stat-val">{daily.newCards} / {settings.dailyNewLimit}</span>
+      </div>
+      <div className="stat-row">
+        <span>Reviews</span>
+        <span className="stat-val">
+          {daily.reviewCards} / {settings.dailyReviewLimit === 0 ? "∞" : settings.dailyReviewLimit}
+        </span>
+      </div>
+      <div className="stat-row">
+        <span>Learning</span>
+        <span className="stat-val">{daily.learningCards}</span>
+      </div>
+
+      <hr className="divider" />
+
       <div className="stat-row">
         <span>Cards reviewed</span>
         <span className="stat-val">{today?.reviewed ?? 0}</span>

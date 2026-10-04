@@ -5,6 +5,8 @@ import { AudioButton } from "./AudioButton.js";
 import { getKanjiAudioActions, stopSpeaking } from "../audio/index.js";
 import { useJapaneseAudioAvailable } from "../audio/useJapaneseAudio.js";
 import type { StudyMode } from "../study/modes.js";
+import type { CardSource } from "../queue/index.js";
+import { SOURCE_LABELS } from "../queue/index.js";
 
 /**
  * Flashcard Kanji: depan hanya karakter; belakang = reading + meaning + examples.
@@ -18,6 +20,7 @@ export function KanjiFlashcard({
   total,
   mode = "recognition",
   prompt,
+  source,
   onRate,
 }: {
   card: KanjiCard;
@@ -25,6 +28,7 @@ export function KanjiFlashcard({
   total: number;
   mode?: StudyMode;
   prompt?: string;
+  source?: CardSource;
   onRate: (rating: Rating) => void;
 }) {
   const [revealed, setRevealed] = useState(false);
@@ -56,6 +60,7 @@ export function KanjiFlashcard({
         >
           <div className="card-face card-front">
             <div className="card-kicker">{kicker}</div>
+            {source && <div className="card-source">{SOURCE_LABELS[source]}</div>}
             {mode === "recall" && prompt ? (
               <>
                 <div className="card-recall-tag">Recall</div>
