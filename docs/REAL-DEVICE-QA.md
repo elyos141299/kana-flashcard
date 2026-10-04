@@ -195,3 +195,66 @@ Issues:
 | Tanggal | Perangkat | Penguji | Ringkasan |
 |---------|-----------|---------|-----------|
 |         |           |         |           |
+
+---
+
+# Phase 25 — Automated verification (4 Okt 2026)
+
+Hasil dari test/build/static audit. **Bukan pengganti real-device QA.**
+
+**Aturan status:** `PASS — AUTO` = terverifikasi otomatis.
+`NOT VERIFIED` = butuh real device, belum diuji. Jangan menulis PASS palsu.
+
+## Production config — PASS — AUTO
+
+- Site 200; semua asset memakai base `/kana-flashcard/` (JS/CSS/manifest/SW/icons).
+- Manifest valid: `start_url` + `scope` = `/kana-flashcard/`, display standalone.
+- Icons 192/512/maskable: 200. SW + registerSW.js: 200.
+- Tidak ada absolute `/assets/...` yang salah.
+
+## PWA / offline — NOT VERIFIED
+
+- Konfigurasi static benar, tetapi install prompt, standalone mode,
+  dan offline setelah install belum diuji di device nyata.
+
+## Regression — PASS — AUTO
+
+- 334/334 tests PASS (24 files), build PASS, lint 0 errors.
+- Mencakup: SRS, queue, mixed study, semua mode belajar, favorites/suspend,
+  card browser, progress, study history, persistence, export/import,
+  migration, PWA config.
+
+## Static UI audit — PASS — AUTO
+
+- Touch target: semua tombol interaktif ≥44px
+  (audio-btn-sm diperbaiki 36px → 44px di Phase 25).
+- Focus: global `:focus-visible`, plus khusus heatmap & typing input.
+- Safe-area: `env(safe-area-inset-bottom)` di tab bar.
+- Layout mobile-first max 520px; heatmap max 420px; tanpa overflow horizontal.
+- Visual identity tidak berubah (Japanese minimalism).
+
+## Study History — PASS — AUTO
+
+- Range 7/30/Semua + default 30 Hari: unit test.
+- Empty date, key invalid, gap tanggal: unit test.
+- Detail harian + "No study activity": SSR test.
+- Streak memakai existing stats; tidak ada interpretasi statistik baru.
+- Heatmap: `<button>` + aria-label per tanggal ("Senin, 5 Okt 2026: 20 kartu
+  dipelajari") — terbaca screen reader tanpa mengandalkan warna.
+
+## Audio — PASS — AUTO (static)
+
+- `ja-JP` diprioritaskan; tanpa autoplay; speech lama di-cancel sebelum baru;
+  tanpa efek ke SRS. Ketersediaan voice tergantung device
+  (headless tanpa Japanese voice = bukan bug).
+
+## Data safety — PASS — AUTO
+
+- Reload aman (localStorage sinkron).
+- Future schema ditolak (ter-cover test); orphan dilaporkan, tidak dihapus diam-diam.
+- Reset menghapus stats+progress, mempertahankan favorite/suspend.
+
+## Performance — PASS — AUTO
+
+- Bundle JS ~779KB raw (~190KB gzip), CSS ~14KB — stabil vs Phase 24 (+6KB).
+- Tanpa chart library; heatmap murni CSS; tidak ada full dataset scan per render.
