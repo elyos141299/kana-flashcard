@@ -1586,7 +1586,7 @@ export const KANJI_N2_A: KanjiCard[] = [
     examples: [
       { word: "討論", reading: "とうろん", meaning: "perdebatan, diskusi" },
       { word: "討議", reading: "とうぎ", meaning: "perdebatan, diskusi" },
-      { word: "討論会", reading: "とうろんかい", meaning: "PERTEMUAN / ACARA DISKUSI" },
+      { word: "討論会", reading: "とうろんかい", meaning: "pertemuan / acara diskusi" },
     ],
   },
   {
@@ -2028,7 +2028,7 @@ export const KANJI_N2_A: KanjiCard[] = [
     kunyomi: ["すたれる", "すたる"],
     commonReadings: ["はい", "すたれる"],
     examples: [
-      { word: "廃案", reading: "はいあん", meaning: "RUU yang ditolak" },
+      { word: "廃案", reading: "はいあん", meaning: "ruu yang ditolak" },
     ],
   },
   {
@@ -2139,7 +2139,7 @@ export const KANJI_N2_A: KanjiCard[] = [
     kunyomi: ["ふむ", "ふまえる"],
     commonReadings: ["とう", "ふむ"],
     examples: [
-      { word: "踏まれます", reading: "ふまれます", meaning: "DIINJAK" },
+      { word: "踏まれます", reading: "ふまれます", meaning: "diinjak" },
     ],
   },
   {
@@ -2914,7 +2914,7 @@ export const KANJI_N2_A: KanjiCard[] = [
     kunyomi: ["かける", "かかる"],
     commonReadings: ["けん", "かける"],
     examples: [
-      { word: "一生懸命", reading: "いっしょうけんめい", meaning: "BERSUNGGUH-SUNGGUH" },
+      { word: "一生懸命", reading: "いっしょうけんめい", meaning: "bersungguh-sungguh" },
     ],
   },
   {
