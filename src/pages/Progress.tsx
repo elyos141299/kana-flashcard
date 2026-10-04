@@ -4,6 +4,7 @@ import { loadCardMeta, toggleFavorite, setSuspended } from "../storage/cardMeta.
 import { getCardById, cardSubLabel } from "../data/cards.js";
 import { isDue } from "../srs/types.js";
 import { formatNextReview } from "../queue/index.js";
+import { StudyHistory } from "../components/StudyHistory.js";
 import type { KanaScript } from "../data/kana/index.js";
 import { selectKana, GROUP_LABELS, KANA_GROUPS } from "../data/kana/index.js";
 import { selectKanji, countKanji } from "../data/kanji/index.js";
@@ -24,7 +25,7 @@ function ScriptBlock({ script, progress }: {
     <div style={{ marginBottom: 18 }}>
       <div className="stat-row">
         <span>{label}</span>
-        <span className="stat-val">{pct(learned, total)}%</span>
+        <span className="stat-val">{learned} / {total}</span>
       </div>
       <div className="meter" aria-hidden="true">
         <div style={{ width: `${pct(learned, total)}%` }} />
@@ -113,6 +114,11 @@ export function Progress() {
         <span>Good / Easy</span>
         <span className="stat-val">{(today?.good ?? 0) + (today?.easy ?? 0)}</span>
       </div>
+
+      <hr className="divider" />
+
+      <p className="section-label">Study History</p>
+      <StudyHistory days={stats.days} />
 
       <hr className="divider" />
 
