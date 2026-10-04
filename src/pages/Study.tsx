@@ -12,6 +12,12 @@ import { loadProgress, saveProgress, recordReview, recordCardRated, loadSettings
 import { loadCardMeta } from "../storage/cardMeta.js";
 import type { StudyMode } from "../study/modes.js";
 import { MODE_LABELS, buildSessionCard } from "../study/modes.js";
+import {
+  buildMixedPool,
+  MIXED_SET_LABELS,
+  MIXED_SET_SIZES,
+  type MixedSetId,
+} from "../study/mixed.js";
 import { buildQueue, formatNextReview, classifySource } from "../queue/index.js";
 import type { CardSource } from "../queue/index.js";
 import { Browse } from "./Browse.js";
@@ -38,6 +44,11 @@ export function Study() {
   const [count, setCount] = useState<number>(() => loadSettings().defaultCards);
   const [studyMode, setStudyMode] = useState<StudyMode>("recognition");
   const [favoritesOnly, setFavoritesOnly] = useState(false);
+  /** Study Source: single set (default) atau mixed study. */
+  const [sourceMode, setSourceMode] = useState<"single" | "mixed">("single");
+  const [mixedSets, setMixedSets] = useState<Set<MixedSetId>>(new Set());
+  /** Apakah sesi berjalan sebagai mixed study (untuk label header/summary). */
+  const mixedSessionRef = useRef(false);
   const [sessionMode, setSessionMode] = useState<StudyMode>("recognition");
   const [queue, setQueue] = useState<QueueItem[]>([]);
   const [done, setDone] = useState(0);
@@ -51,10 +62,12 @@ export function Study() {
   /** Menyimpan apakah sesi kosong berasal dari mode favorites-only. */
   const favoritesOnlyRef = useRef(false);
 
-  const candidatePool: Array<KanaCard | KanjiCard> =
-    category === "kanji"
+  const candidatePool: Array<KanaCard | KanjiCard> = useMemo(() => {
+    if (sourceMode === "mixed") return buildMixedPool(mixedSets);
+    return category === "kanji"
       ? selectKanji(kanjiLevel)
       : selectKana(category as KanaScript, kanaGroup);
+  }, [sourceMode, mixedSets, category, kanaGroup, kanjiLevel]);
 
   /** Preview queue untuk setup — dihitung ulang hanya saat input setup berubah. */
   const queuePreview = useMemo(
@@ -73,8 +86,27 @@ export function Study() {
         favoriteOnly: favoritesOnly,
       }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [category, kanaGroup, kanjiLevel, studyMode, count, favoritesOnly],
+    [candidatePool, studyMode, count, favoritesOnly],
   );
+
+  /** Pindah ke Mixed Study; pre-select set yang sedang aktif di single mode. */
+  const switchToMixed = () => {
+    if (sourceMode !== "mixed" && mixedSets.size === 0) {
+      const current: MixedSetId =
+        category === "kanji" ? kanjiLevel : (category as MixedSetId);
+      setMixedSets(new Set([current]));
+    }
+    setSourceMode("mixed");
+  };
+
+  const toggleMixedSet = (id: MixedSetId) => {
+    setMixedSets((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  };
 
   const start = () => {
     // Smart queue: Learning due → Review due → New (dengan daily limits).
@@ -97,6 +129,7 @@ export function Study() {
       return;
     }
     setSessionMode(studyMode);
+    mixedSessionRef.current = sourceMode === "mixed";
     setQueue(
       result.cards.map((qc) => ({
         card: qc.card,
@@ -122,6 +155,7 @@ export function Study() {
     const sc = buildSessionCard(card, mode);
     const p = loadProgress()[card.id] ?? null;
     setSessionMode(mode);
+    mixedSessionRef.current = false;
     setQueue([{ card, requeues: 0, source: classifySource(p), prompt: sc.prompt }]);
     setTotal(1);
     setDone(0);
@@ -186,7 +220,55 @@ export function Study() {
           </button>
         </div>
 
-        <p className="section-label">Category</p>
+        <p className="section-label" id="study-source-label">Study Source</p>
+        <div className="segmented" role="radiogroup" aria-labelledby="study-source-label">
+          {(["single", "mixed"] as const).map((s) => (
+            <label key={s} className={`segmented-btn${sourceMode === s ? " is-active" : ""}`}>
+              <input
+                type="radio"
+                name="study-source"
+                value={s}
+                checked={sourceMode === s}
+                onChange={() => (s === "mixed" ? switchToMixed() : setSourceMode("single"))}
+                className="sr-only"
+              />
+              {s === "single" ? "Single Set" : "Mixed Study"}
+            </label>
+          ))}
+        </div>
+
+        {sourceMode === "mixed" ? (
+          <>
+            <p className="section-label">Kana</p>
+            <div className="mixed-checks">
+              {(["hiragana", "katakana"] as const).map((id) => (
+                <label key={id} className="mixed-check">
+                  <input
+                    type="checkbox"
+                    checked={mixedSets.has(id)}
+                    onChange={() => toggleMixedSet(id)}
+                  />
+                  <span>{MIXED_SET_LABELS[id]} <span className="mixed-count">{MIXED_SET_SIZES[id]}</span></span>
+                </label>
+              ))}
+            </div>
+            <p className="section-label">Kanji</p>
+            <div className="mixed-checks">
+              {(["N5", "N4", "N3", "N2", "N1"] as const).map((id) => (
+                <label key={id} className="mixed-check">
+                  <input
+                    type="checkbox"
+                    checked={mixedSets.has(id)}
+                    onChange={() => toggleMixedSet(id)}
+                  />
+                  <span>{MIXED_SET_LABELS[id]} <span className="mixed-count">{MIXED_SET_SIZES[id]}</span></span>
+                </label>
+              ))}
+            </div>
+          </>
+        ) : (
+          <>
+            <p className="section-label">Category</p>
         <div className="choice-grid">
           <button className="choice" aria-pressed={category === "hiragana"} onClick={() => setCategory("hiragana")}>
             あ Hiragana
@@ -232,6 +314,8 @@ export function Study() {
             </div>
           </>
         )}
+          </>
+        )}
 
         <p className="section-label">Cards</p>
         <div className="choice-grid" style={{ gridTemplateColumns: "repeat(4, 1fr)" }}>
@@ -275,7 +359,18 @@ export function Study() {
           <span>★ Study favorites only</span>
         </label>
 
-        <button className="btn btn-primary" onClick={start}>Start Study</button>
+        <button
+          className="btn btn-primary"
+          onClick={start}
+          disabled={sourceMode === "mixed" && mixedSets.size === 0}
+        >
+          Start Study
+        </button>
+        {sourceMode === "mixed" && mixedSets.size === 0 && (
+          <p style={{ color: "var(--ink-soft)", fontSize: 14, marginTop: 8 }}>
+            Select at least one study set.
+          </p>
+        )}
         <p style={{ color: "var(--ink-soft)", fontSize: 14, marginTop: 14 }}>
           {queuePreview.cards.length === 0
             ? "Tidak ada kartu yang jatuh tempo saat ini."
@@ -334,6 +429,9 @@ export function Study() {
       <div className="page" style={{ textAlign: "center" }}>
         <h1 className="page-title">Session Complete</h1>
         <div className="summary-big" lang="ja">終</div>
+        {mixedSessionRef.current && (
+          <p className="summary-line">Mixed Study</p>
+        )}
         <p style={{ fontSize: 18 }}>{done} kartu selesai direview.</p>
         {breakdownParts.length > 0 && (
           <p className="summary-line">{breakdownParts.join(" · ")}</p>
@@ -367,8 +465,9 @@ export function Study() {
   const current = queue[0];
   if (!current) return null;
 
-  const sessionLabel =
-    category === "kanji"
+  const sessionLabel = mixedSessionRef.current
+    ? `Mixed Study · ${MODE_LABELS[sessionMode]}`
+    : category === "kanji"
       ? `Kanji ${kanjiLevel} · ${MODE_LABELS[sessionMode]}`
       : `${category === "hiragana" ? "Hiragana" : "Katakana"} · ${MODE_LABELS[sessionMode]}${kanaGroup === "all" ? "" : ` · ${GROUP_LABELS[kanaGroup as keyof typeof GROUP_LABELS]}`}`;
 

@@ -947,3 +947,33 @@
   text-align: center;
   margin: 8px 0 12px;
 }
+
+/* ---- Mixed Study (Phase 18) ---- */
+.mixed-checks {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 6px;
+}
+
+.mixed-check {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 44px;
+  padding: 6px 4px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.mixed-check input {
+  width: 20px;
+  height: 20px;
+  accent-color: var(--vermilion);
+  flex: 0 0 auto;
+}
+
+.mixed-count {
+  color: var(--ink-soft);
+  font-size: 13px;
+}
