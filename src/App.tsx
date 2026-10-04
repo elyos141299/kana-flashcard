@@ -3,6 +3,7 @@ import { TabBar } from "./components/TabBar.js";
 import type { TabId } from "./components/TabBar.js";
 import { Home } from "./pages/Home.js";
 import { Study } from "./pages/Study.js";
+import { Reference } from "./pages/Reference.js";
 import { Progress } from "./pages/Progress.js";
 import { SettingsPage, applyTheme } from "./pages/Settings.js";
 import { loadSettings } from "./storage/progress.js";
@@ -27,6 +28,7 @@ export default function App() {
     <div className="app">
       {tab === "home" && <Home go={setTab} />}
       {tab === "study" && <Study />}
+      {tab === "reference" && <Reference />}
       {tab === "progress" && <Progress />}
       {tab === "settings" && <SettingsPage />}
       <TabBar active={tab} onChange={setTab} />
