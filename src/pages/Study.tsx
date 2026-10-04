@@ -11,11 +11,12 @@ import { rateCard } from "../srs/scheduler.js";
 import { loadProgress, saveProgress, recordReview, recordCardRated, loadSettings, getDailyCounts } from "../storage/progress.js";
 import { loadCardMeta } from "../storage/cardMeta.js";
 import type { StudyMode } from "../study/modes.js";
-import { MODE_LABELS } from "../study/modes.js";
+import { MODE_LABELS, buildSessionCard } from "../study/modes.js";
 import { buildQueue, formatNextReview, classifySource } from "../queue/index.js";
 import type { CardSource } from "../queue/index.js";
+import { Browse } from "./Browse.js";
 
-type Phase = "setup" | "session" | "done" | "empty";
+type Phase = "setup" | "session" | "done" | "empty" | "browse";
 type Category = "hiragana" | "katakana" | "kanji";
 
 interface QueueItem {
@@ -112,6 +113,24 @@ export function Study() {
     setPhase("session");
   };
 
+  /**
+   * One-card session dari Card Browser ("Study This Card").
+   * Kartu tetap memakai SRS normal — tidak reset interval, tidak force due.
+   * Eligibility sudah dicek di Browse (due/new, tidak suspended, limit tersedia).
+   */
+  const startSingleCard = (card: KanaCard | KanjiCard, mode: StudyMode) => {
+    const sc = buildSessionCard(card, mode);
+    const p = loadProgress()[card.id] ?? null;
+    setSessionMode(mode);
+    setQueue([{ card, requeues: 0, source: classifySource(p), prompt: sc.prompt }]);
+    setTotal(1);
+    setDone(0);
+    setAgainCards(new Set());
+    setRatingBreakdown({ again: 0, hard: 0, good: 0, easy: 0 });
+    setTypingStats({ correct: 0, wrong: 0 });
+    setPhase("session");
+  };
+
   /** Statistik typing: correctness ≠ rating SRS. Dipanggil sekali per Check. */
   const handleCheck = (correct: boolean) => {
     setTypingStats((prev) =>
@@ -160,7 +179,12 @@ export function Study() {
   if (phase === "setup") {
     return (
       <div className="page">
-        <h1 className="page-title">Study Setup</h1>
+        <div className="browse-header">
+          <h1 className="page-title" style={{ margin: 0 }}>Study Setup</h1>
+          <button type="button" className="link-btn" onClick={() => setPhase("browse")}>
+            Browse Cards →
+          </button>
+        </div>
 
         <p className="section-label">Category</p>
         <div className="choice-grid">
@@ -328,6 +352,15 @@ export function Study() {
           <button className="btn btn-primary" onClick={start}>Ulangi</button>
         </div>
       </div>
+    );
+  }
+
+  if (phase === "browse") {
+    return (
+      <Browse
+        onBack={() => setPhase("setup")}
+        onStudyCard={startSingleCard}
+      />
     );
   }
 

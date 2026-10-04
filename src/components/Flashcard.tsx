@@ -55,6 +55,7 @@ export function Flashcard({
   prompt,
   source,
   onRate,
+  previewOnly = false,
 }: {
   card: KanaCard;
   index: number;
@@ -63,6 +64,8 @@ export function Flashcard({
   prompt?: string;
   source?: CardSource;
   onRate: (rating: Rating) => void;
+  /** Preview dari Card Browser: reveal + audio, tanpa rating (bukan bypass SRS). */
+  previewOnly?: boolean;
 }) {
   const [revealed, setRevealed] = useState(false);
   /** Guard ref (sinkron) agar rapid double-click hanya dihitung sekali. */
@@ -121,7 +124,7 @@ export function Flashcard({
 
       <CardActions cardId={card.id} />
 
-      {revealed && (
+      {revealed && !previewOnly && (
         <div className="rating-grid" role="group" aria-label="Nilai hafalan">
           <button className="rating-btn again" onClick={() => handleRate("again")}>Again</button>
           <button className="rating-btn hard" onClick={() => handleRate("hard")}>Hard</button>
