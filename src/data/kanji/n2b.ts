@@ -196,7 +196,7 @@ export const KANJI_N2_B: KanjiCard[] = [
     examples: [
       { word: "歓声", reading: "かんせい", meaning: "sorak-sorai, sorak gembira" },
       { word: "歓喜", reading: "かんき", meaning: "kegembiraan, kegembiraan besar" },
-      { word: "歓迎する", reading: "かんげいする", meaning: "Menyambut" },
+      { word: "歓迎する", reading: "かんげいする", meaning: "menyambut" },
     ],
   },
   {
@@ -618,7 +618,7 @@ export const KANJI_N2_B: KanjiCard[] = [
     kunyomi: ["くら"],
     commonReadings: ["そう", "くら"],
     examples: [
-      { word: "倉庫", reading: "そうこ", meaning: "GUDANG" },
+      { word: "倉庫", reading: "そうこ", meaning: "gudang" },
       { word: "米倉", reading: "こめぐら", meaning: "lumbung padi" },
       { word: "倉敷", reading: "くらしき", meaning: "Kurashiki (kota)" },
     ],
@@ -812,7 +812,7 @@ export const KANJI_N2_B: KanjiCard[] = [
     commonReadings: ["きょう", "おどろく"],
     examples: [
       { word: "驚く", reading: "おどろく", meaning: "Terkejut" },
-      { word: "驚きます", reading: "おどろきます", meaning: "TERKEJUT" },
+      { word: "驚きます", reading: "おどろきます", meaning: "terkejut" },
       { word: "吃驚する", reading: "びっくりする", meaning: "Kaget / terkejut" },
     ],
   },
@@ -1596,7 +1596,7 @@ export const KANJI_N2_B: KanjiCard[] = [
     commonReadings: ["がん", "かたくな"],
     examples: [
       { word: "頑張り", reading: "がんばり", meaning: "ketekunan, ketahanan" },
-      { word: "頑張る", reading: "がんばる", meaning: "Semangat / bersemangat" },
+      { word: "頑張る", reading: "がんばる", meaning: "semangat / bersemangat" },
     ],
   },
   {
@@ -3375,7 +3375,7 @@ export const KANJI_N2_B: KanjiCard[] = [
     kunyomi: ["おちる", "おつ"],
     commonReadings: ["つい", "おちる"],
     examples: [
-      { word: "墜落", reading: "ついらく", meaning: "Jatuh (kecelakaan)" },
+      { word: "墜落", reading: "ついらく", meaning: "jatuh (kecelakaan)" },
       { word: "撃墜", reading: "げきつい", meaning: "menembak jatuh (pesawat)" },
     ],
   },
