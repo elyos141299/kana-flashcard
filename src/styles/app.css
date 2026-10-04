@@ -730,3 +730,8 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+
+.meta-card-status {
+  color: var(--ink);
+  font-weight: 600;
+}

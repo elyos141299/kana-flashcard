@@ -266,14 +266,20 @@ export function Study() {
 
   if (phase === "empty") {
     const anyFavorite = Object.values(loadCardMeta()).some((m) => m.favorite);
+    const favOnly = favoritesOnlyRef.current;
     return (
       <div className="page" style={{ textAlign: "center" }}>
         <h1 className="page-title">Study</h1>
         <div className="summary-big" lang="ja">完</div>
-        {favoritesOnlyRef.current && !anyFavorite ? (
+        {favOnly && !anyFavorite ? (
           <p style={{ fontSize: 18 }}>No favorite cards yet.</p>
-        ) : favoritesOnlyRef.current ? (
-          <p style={{ fontSize: 18 }}>No favorite cards are currently available.</p>
+        ) : favOnly ? (
+          <>
+            <p style={{ fontSize: 18 }}>No favorite cards are due right now.</p>
+            <p className="summary-line">
+              Your favorite cards will return when they are due.
+            </p>
+          </>
         ) : (
           <>
             <p style={{ fontSize: 18 }}>Semua sudah selesai.</p>
@@ -282,7 +288,7 @@ export function Study() {
         )}
         {emptyNextReview && (
           <p className="summary-line">
-            Review berikutnya: {formatNextReview(emptyNextReview)}
+            {favOnly ? "Next favorite review" : "Review berikutnya"}: {formatNextReview(emptyNextReview)}
           </p>
         )}
         <div className="btn-row">

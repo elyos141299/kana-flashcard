@@ -32,17 +32,45 @@ Favorite dan Suspend **bukan** state SRS. Tidak ada state machine baru.
   (tidak direset menjadi NEW, tidak dipaksa masuk sesi).
 - Suspend tidak mengembalikan kuota daily yang sudah terpakai.
 
-## Queue behavior
+## Study Favorites
+
+Opsi `★ Study favorites only` di Study Setup. Favorite adalah **filter**,
+bukan override terhadap SRS.
+
+`Study Favorites` hanya mengambil kartu yang:
 
 ```
-if suspended → exclude
-else if favoriteOnly && !favorite → exclude
-else → klasifikasi normal (Learning due → Review due → New)
+favorite = true
+AND suspended = false
+AND eligible menurut aturan queue normal
 ```
 
-- Favorite study tetap menghormati SRS: kartu favorite yang belum due
-  tidak dipaksa masuk; new favorite boleh masuk jika eligible.
-- Favorite ≠ force review. Suspend ≠ delete.
+- **NEW**: boleh masuk jika daily new limit masih tersedia.
+- **LEARNING**: hanya jika `state = learning AND dueAt <= now`.
+- **REVIEW**: hanya jika `state = review AND dueAt <= now`.
+- Kartu favorite yang belum due **tidak dipaksa masuk** — tidak mengubah
+  dueAt, interval, atau state.
+- Priority di dalam Study Favorites tetap: Learning due → Review due → New;
+  most overdue first; New mengikuti urutan dataset.
+- Daily limits tetap berlaku; favorite tidak mendapat kuota khusus.
+- Jika sebagian eligible: session berjalan dengan kartu yang tersedia saja
+  (tidak diisi non-favorite, tidak diduplikasi).
+- Jika semua favorite belum due → empty state:
+  `No favorite cards are due right now.` + waktu review favorite berikutnya
+  jika tersedia.
+
+## Non-due favorite tetap terlihat
+
+Favorites View (di Progress) menampilkan **semua** favorite yang tidak
+suspended — termasuk yang belum due — dengan status kecil:
+`Due / Learning / New / Besok / …`.
+Kartu tersebut tidak masuk Study Favorites sampai eligible.
+
+## Suspended favorites
+
+`favorite = true + suspended = true` → tetap favorite dan tersimpan,
+tidak masuk Study Favorites maupun queue normal. Setelah unsuspend,
+kembali menjadi favorite dan mengikuti aturan due normal.
 
 ## Favorites & Suspended view
 

@@ -2,6 +2,8 @@ import { useState } from "react";
 import { loadProgress, loadSettings, loadStats, todayKey, getDailyCounts } from "../storage/progress.js";
 import { loadCardMeta, toggleFavorite, setSuspended } from "../storage/cardMeta.js";
 import { getCardById, cardSubLabel } from "../data/cards.js";
+import { isDue } from "../srs/types.js";
+import { formatNextReview } from "../queue/index.js";
 import type { KanaScript } from "../data/kana/index.js";
 import { selectKana, GROUP_LABELS, KANA_GROUPS } from "../data/kana/index.js";
 import { selectKanji, countKanji } from "../data/kanji/index.js";
@@ -50,8 +52,9 @@ export function Progress() {
   const daily = getDailyCounts();
 
   // Daftar kartu favorite / suspended dari metadata (refresh saat ada aksi).
+  // Favorites view: semua favorite yang TIDAK suspended (suspended ada di list sendiri).
   const favorites = Object.keys(meta)
-    .filter((id) => meta[id].favorite)
+    .filter((id) => meta[id].favorite && !meta[id].suspended)
     .map(getCardById)
     .filter((c): c is NonNullable<typeof c> => !!c);
   const suspended = Object.keys(meta)
@@ -60,6 +63,15 @@ export function Progress() {
     .filter((c): c is NonNullable<typeof c> => !!c);
 
   const refreshMeta = () => setMeta(loadCardMeta());
+
+  /** Status kecil per kartu favorite: Due / Learning / New / waktu relatif. */
+  const favStatus = (cardId: string): string => {
+    const p = progress[cardId];
+    if (!p) return "New";
+    if (isDue(p)) return "Due";
+    if (p.state === "learning") return "Learning";
+    return formatNextReview(p.dueAt);
+  };
 
   return (
     <div className="page">
@@ -148,7 +160,10 @@ export function Progress() {
           {favorites.map((card) => (
             <div className="meta-card-row" key={card.id}>
               <span className="meta-card-char" lang="ja">{card.character}</span>
-              <span className="meta-card-sub">{cardSubLabel(card)}</span>
+              <span className="meta-card-sub">
+                {cardSubLabel(card)}
+                <span className="meta-card-status"> · {favStatus(card.id)}</span>
+              </span>
               <button
                 type="button"
                 className="card-action-btn is-active"
