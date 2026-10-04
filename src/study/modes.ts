@@ -9,13 +9,14 @@
  */
 import type { KanaCard } from "../data/kana/index.js";
 import type { KanjiCard } from "../data/kanji/index.js";
+import type { VocabCard } from "../data/vocab/index.js";
 
 export type StudyMode = "recognition" | "recall" | "typing-recall";
 
-export type PromptType = "character" | "romaji" | "reading";
+export type PromptType = "character" | "romaji" | "reading" | "meaning";
 
 export interface SessionCard {
-  card: KanaCard | KanjiCard;
+  card: KanaCard | KanjiCard | VocabCard;
   mode: StudyMode;
   /**
    * Teks prompt untuk mode recall / typing-recall (romaji / reading).
@@ -49,12 +50,33 @@ export function getKanjiRecallPrompt(card: KanjiCard): string {
   return card.commonReadings[0] ?? card.onyomi[0] ?? card.kunyomi[0] ?? "";
 }
 
+/**
+ * Prompt recall untuk vocabulary: SATU meaning (Indonesia), deterministic.
+ * User diminta menghasilkan/recognize bentuk Jepang.
+ */
+export function getVocabRecallPrompt(card: VocabCard): string {
+  return card.meanings[0] ?? "";
+}
+
 /** Bangun session card: hitung prompt sekali di awal sesi. */
 export function buildSessionCard(
-  card: KanaCard | KanjiCard,
+  card: KanaCard | KanjiCard | VocabCard,
   mode: StudyMode,
 ): SessionCard {
   if (mode === "recognition") return { card, mode };
+  if (card.type === "vocabulary") {
+    const prompt = getVocabRecallPrompt(card);
+    if (mode === "typing-recall") {
+      return {
+        card,
+        mode,
+        prompt,
+        promptType: "meaning",
+        expectedAnswer: card.word,
+      };
+    }
+    return { card, mode, prompt, promptType: "meaning" };
+  }
   if (card.type === "kana") {
     const prompt = getKanaRecallPrompt(card);
     if (mode === "typing-recall") {
