@@ -9,15 +9,16 @@
  */
 import type { KanaCard } from "../data/kana/index.js";
 import type { KanjiCard } from "../data/kanji/index.js";
+import type { VocabCard } from "../data/vocab/index.js";
 import type { CardProgress } from "../srs/types.js";
 import { isDue } from "../srs/types.js";
 import { classifySource } from "../queue/classify.js";
 import type { CardMeta } from "../storage/cardMeta.js";
 import type { DailyCounts } from "../queue/types.js";
 
-export type AnyCard = KanaCard | KanjiCard;
+export type AnyCard = KanaCard | KanjiCard | VocabCard;
 
-export type DatasetFilter = "all" | "kana" | "kanji";
+export type DatasetFilter = "all" | "kana" | "kanji" | "vocabulary";
 export type KanaScriptFilter = "hiragana" | "katakana";
 export type StatusFilter =
   | "all"
@@ -47,11 +48,18 @@ export function normalizeQuery(q: string): string {
   return q.normalize("NFC").trim();
 }
 
-/** Apakah kartu cocok dengan query (character / reading / romaji). */
+/** Apakah kartu cocok dengan query (character/word / reading / romaji / meaning). */
 export function matchesCard(card: AnyCard, rawQuery: string): boolean {
   const query = normalizeQuery(rawQuery);
   if (!query) return true;
   const qLower = query.toLowerCase();
+  if (card.type === "vocabulary") {
+    if (card.word.includes(query)) return true;
+    if (card.kanaForm?.includes(query)) return true;
+    if (card.reading.includes(query)) return true;
+    if (card.readings?.some((r) => r.includes(query))) return true;
+    return card.meanings.some((m) => m.toLowerCase().includes(qLower));
+  }
   if (card.character.includes(query)) return true;
   if (card.type === "kana") {
     return !!card.romaji && card.romaji.toLowerCase().includes(qLower);
@@ -104,6 +112,7 @@ export function filterCards(
   return cards.filter((card) => {
     if (filters.dataset === "kana" && card.type !== "kana") return false;
     if (filters.dataset === "kanji" && card.type !== "kanji") return false;
+    if (filters.dataset === "vocabulary" && card.type !== "vocabulary") return false;
     if (filters.dataset === "kana" && card.type === "kana" && card.script !== filters.script) {
       return false;
     }
