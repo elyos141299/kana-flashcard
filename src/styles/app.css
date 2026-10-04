@@ -984,3 +984,41 @@
   color: var(--ink-soft);
   font-size: 13px;
 }
+
+/* ---- Study History heatmap (Phase 24) ---- */
+.heat-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6px;
+  max-width: 420px;
+}
+.heat-weekday {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--ink-soft);
+  text-align: center;
+  padding-bottom: 2px;
+}
+.heat-cell {
+  aspect-ratio: 1;
+  border-radius: 6px;
+  border: 1px solid var(--hairline);
+  background: transparent;
+  padding: 0;
+  cursor: pointer;
+  min-width: 0;
+}
+.heat-cell.heat-0 { background: transparent; }
+.heat-cell.heat-1 { background: color-mix(in srgb, var(--vermilion) 22%, transparent); border-color: transparent; }
+.heat-cell.heat-2 { background: color-mix(in srgb, var(--vermilion) 45%, transparent); border-color: transparent; }
+.heat-cell.heat-3 { background: color-mix(in srgb, var(--vermilion) 70%, transparent); border-color: transparent; }
+.heat-cell.heat-4 { background: var(--vermilion); border-color: transparent; }
+.heat-cell.is-selected {
+  outline: 2px solid var(--indigo);
+  outline-offset: 2px;
+}
+.heat-cell:focus-visible {
+  outline: 2px solid var(--indigo);
+  outline-offset: 2px;
+}
