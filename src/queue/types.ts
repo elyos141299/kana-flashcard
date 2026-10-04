@@ -3,13 +3,14 @@
  * Queue hanya mengatur URUTAN dan PEMILIHAN kartu — SRS engine tidak diubah.
  */
 import type { KanaCard } from "../data/kana/index.js";
+import type { VocabCard } from "../data/vocab/index.js";
 import type { KanjiCard } from "../data/kanji/index.js";
 
 /** Kategori kartu berdasarkan progress SRS. Hanya tiga — tidak ada state keempat. */
 export type CardSource = "new" | "learning" | "review";
 
 export interface QueueCard {
-  card: KanaCard | KanjiCard;
+  card: KanaCard | KanjiCard | VocabCard;
   source: CardSource;
   /** Prompt recall (Phase 11). Undefined untuk recognition. */
   prompt?: string;
