@@ -5,6 +5,7 @@ import type { KanjiCard, KanjiLevel } from "../data/kanji/index.js";
 import { selectKanji } from "../data/kanji/index.js";
 import { Flashcard } from "../components/Flashcard.js";
 import { KanjiFlashcard } from "../components/KanjiFlashcard.js";
+import { TypingKanaCard, TypingKanjiCard } from "../components/TypingFlashcard.js";
 import type { Rating, CardProgress } from "../srs/types.js";
 import { rateCard } from "../srs/scheduler.js";
 import { loadProgress, saveProgress, recordReview, recordCardRated, loadSettings, getDailyCounts } from "../storage/progress.js";
@@ -42,6 +43,8 @@ export function Study() {
   const [emptyNextReview, setEmptyNextReview] = useState<string | null>(null);
   /** Breakdown rating sesi ini (tidak disimpan permanen). */
   const [ratingBreakdown, setRatingBreakdown] = useState({ again: 0, hard: 0, good: 0, easy: 0 });
+  /** Statistik typing sesi ini (tidak disimpan permanen). */
+  const [typingStats, setTypingStats] = useState({ correct: 0, wrong: 0 });
 
   const candidatePool: Array<KanaCard | KanjiCard> =
     category === "kanji"
@@ -96,11 +99,18 @@ export function Study() {
     setDone(0);
     setAgainCards(new Set());
     setRatingBreakdown({ again: 0, hard: 0, good: 0, easy: 0 });
+    setTypingStats({ correct: 0, wrong: 0 });
     setPhase("session");
   };
 
-  const handleRate = (rating: Rating) => {
-    const [head, ...rest] = queue;
+  /** Statistik typing: correctness ≠ rating SRS. Dipanggil sekali per Check. */
+  const handleCheck = (correct: boolean) => {
+    setTypingStats((prev) =>
+      correct ? { ...prev, correct: prev.correct + 1 } : { ...prev, wrong: prev.wrong + 1 },
+    );
+  };
+
+  const handleRate = (rating: Rating) => {    const [head, ...rest] = queue;
     if (!head) return;
 
     // SRS engine menghitung jadwal; UI hanya meneruskan rating.
@@ -218,7 +228,9 @@ export function Study() {
         <p className="mode-hint">
           {studyMode === "recognition"
             ? "Lihat karakter Jepang, ingat bacaan/artinya."
-            : "Lihat bacaan, ingat karakter Jepangnya."}
+            : studyMode === "recall"
+              ? "Lihat bacaan, ingat karakter Jepangnya."
+              : "Ketik karakter Jepang dari bacaan yang diberikan."}
         </p>
 
         <button className="btn btn-primary" onClick={start}>Start Study</button>
@@ -269,6 +281,11 @@ export function Study() {
         {breakdownParts.length > 0 && (
           <p className="summary-line">{breakdownParts.join(" · ")}</p>
         )}
+        {sessionMode === "typing-recall" && typingStats.correct + typingStats.wrong > 0 && (
+          <p className="summary-line">
+            Typed correctly {typingStats.correct} · incorrect {typingStats.wrong}
+          </p>
+        )}
         <p className="summary-line">
           Mode: {MODE_LABELS[sessionMode]}
           {againCards.size > 0 && ` · ${againCards.size} kartu perlu diulang`}
@@ -296,14 +313,38 @@ export function Study() {
         <button className="link-btn" onClick={() => setPhase("setup")}>Akhiri</button>
       </div>
       {current.card.type === "kanji" ? (
-        <KanjiFlashcard
+        sessionMode === "typing-recall" ? (
+          <TypingKanjiCard
+            key={current.card.id + "-" + done}
+            card={current.card}
+            index={done}
+            total={total}
+            prompt={current.prompt ?? ""}
+            source={current.source}
+            onCheck={handleCheck}
+            onRate={handleRate}
+          />
+        ) : (
+          <KanjiFlashcard
+            key={current.card.id + "-" + done}
+            card={current.card}
+            index={done}
+            total={total}
+            mode={sessionMode}
+            prompt={current.prompt}
+            source={current.source}
+            onRate={handleRate}
+          />
+        )
+      ) : sessionMode === "typing-recall" ? (
+        <TypingKanaCard
           key={current.card.id + "-" + done}
           card={current.card}
           index={done}
           total={total}
-          mode={sessionMode}
-          prompt={current.prompt}
+          prompt={current.prompt ?? ""}
           source={current.source}
+          onCheck={handleCheck}
           onRate={handleRate}
         />
       ) : (

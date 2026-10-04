@@ -9,6 +9,39 @@ import type { CardSource } from "../queue/index.js";
 import { SOURCE_LABELS } from "../queue/index.js";
 
 /**
+ * Isi belakang kartu kana: character → reading → audio → examples.
+ * Dipakai Flashcard (setelah reveal) dan TypingKanaCard (setelah Check).
+ */
+export function KanaBack({ card }: { card: KanaCard }) {
+  const audioAvailable = useJapaneseAudioAvailable();
+  const [kanaAudio] = getKanaAudioActions(card);
+  return (
+    <>
+      <div className="card-char" lang="ja">{card.character}</div>
+      {card.romaji ? (
+        <div className="card-reading">{card.romaji.toUpperCase()}</div>
+      ) : (
+        <div className="card-note" lang="id">{card.note}</div>
+      )}
+      {audioAvailable ? (
+        <AudioButton text={kanaAudio.text} label={kanaAudio.label} />
+      ) : (
+        <p className="audio-note">🔇 Suara Jepang tidak tersedia di perangkat ini.</p>
+      )}
+      {card.example && (
+        <div className="card-example" lang="ja">
+          {card.example}
+          <span style={{ color: "var(--ink-soft)", fontSize: 15 }}> · {card.exampleReading}</span>
+        </div>
+      )}
+      {card.exampleMeaning && (
+        <div className="card-example-meaning">{card.exampleMeaning}</div>
+      )}
+    </>
+  );
+}
+
+/**
  * Kartu flashcard: tap untuk reveal (flip), lalu nilai Again/Hard/Good/Easy.
  * - recognition: depan = karakter Jepang.
  * - recall: depan = prompt (romaji), jawaban = karakter Jepang.
@@ -31,8 +64,6 @@ export function Flashcard({
   onRate: (rating: Rating) => void;
 }) {
   const [revealed, setRevealed] = useState(false);
-  const audioAvailable = useJapaneseAudioAvailable();
-  const [kanaAudio] = getKanaAudioActions(card);
   /** Guard ref (sinkron) agar rapid double-click hanya dihitung sekali. */
   const ratedRef = useRef(false);
 
@@ -82,26 +113,7 @@ export function Flashcard({
           </div>
           <div className="card-face card-back">
             <div className="card-kicker">{kicker}</div>
-            <div className="card-char" lang="ja">{card.character}</div>
-            {card.romaji ? (
-              <div className="card-reading">{card.romaji.toUpperCase()}</div>
-            ) : (
-              <div className="card-note" lang="id">{card.note}</div>
-            )}
-            {audioAvailable ? (
-              <AudioButton text={kanaAudio.text} label={kanaAudio.label} />
-            ) : (
-              <p className="audio-note">🔇 Suara Jepang tidak tersedia di perangkat ini.</p>
-            )}
-            {card.example && (
-              <div className="card-example" lang="ja">
-                {card.example}
-                <span style={{ color: "var(--ink-soft)", fontSize: 15 }}> · {card.exampleReading}</span>
-              </div>
-            )}
-            {card.exampleMeaning && (
-              <div className="card-example-meaning">{card.exampleMeaning}</div>
-            )}
+            <KanaBack card={card} />
           </div>
         </div>
       </div>
