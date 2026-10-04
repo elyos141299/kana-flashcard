@@ -7,6 +7,7 @@
  * - Queue dihitung saat sesi dimulai (bukan setiap render).
  */
 import type { KanaCard } from "../data/kana/index.js";
+import type { VocabCard } from "../data/vocab/index.js";
 import type { KanjiCard } from "../data/kanji/index.js";
 import type { CardProgress } from "../srs/types.js";
 import { isDue } from "../srs/types.js";
@@ -23,7 +24,7 @@ import type {
 } from "./types.js";
 
 interface Scored {
-  card: KanaCard | KanjiCard;
+  card: KanaCard | KanjiCard | VocabCard;
   source: CardSource;
   dueAtMs: number;
 }
@@ -35,7 +36,7 @@ function byDueThenId(a: Scored, b: Scored): number {
 
 export function buildQueue(args: {
   /** Kandidat dalam urutan dataset (deterministic untuk NEW). */
-  cards: Array<KanaCard | KanjiCard>;
+  cards: Array<KanaCard | KanjiCard | VocabCard>;
   progress: Record<string, CardProgress>;
   mode: StudyMode;
   /** Jumlah kartu yang diminta user (10/20/30/50). */
@@ -55,7 +56,7 @@ export function buildQueue(args: {
 
   const learningDue: Scored[] = [];
   const reviewDue: Scored[] = [];
-  const fresh: Array<KanaCard | KanjiCard> = [];
+  const fresh: Array<KanaCard | KanjiCard | VocabCard> = [];
   let nextReviewAt: string | null = null;
   let nextReviewMs = Infinity;
 
@@ -145,7 +146,7 @@ export function formatNextReview(nextReviewAt: string, now: Date = new Date()): 
  * Satu pass tanpa sorting — aman dipanggil saat render.
  */
 export function getTodaySummary(args: {
-  cards: Array<KanaCard | KanjiCard>;
+  cards: Array<KanaCard | KanjiCard | VocabCard>;
   progress: Record<string, CardProgress>;
   limits: QueueLimits;
   daily: DailyCounts;
