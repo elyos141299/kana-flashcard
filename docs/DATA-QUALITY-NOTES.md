@@ -36,6 +36,15 @@ dan ditunda untuk review mendatang. **Jangan diubah massal tanpa keputusan produ
   dengan arti kartu ("melampirkan, menemani").
 - Diperbaiki menjadi "menemani", didukung arti kartu dari KANJIDIC2.
 
+### Arti 杉 dalam Bahasa Inggris — FIXED (Phase 21)
+- N2 杉 (kanji-n2-077): meanings = ["cedar"] (Bahasa Inggris), tidak konsisten
+  dengan arti Bahasa Indonesia di seluruh dataset.
+- Glosarium Inggris KANJIDIC2 untuk 杉 memang "cedar" — source terverifikasi.
+- Diperbaiki menjadi ["pohon cedar"], konsisten dengan meaning contoh pada
+  kartu yang sama (杉/すぎ = "pohon cedar").
+- Tidak mengubah: character, level, ON/KUN readings, examples, cardId.
+  cardId tetap → progress SRS tidak terpengaruh.
+
 ## Future review
 - Normalisasi kapitalisasi arti contoh (perlu source valid atau keputusan produk).
 - Review reading langka/loanword seperti "だーす" untuk kelayakan pedagogis.
