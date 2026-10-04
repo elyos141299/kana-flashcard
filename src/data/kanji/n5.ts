@@ -290,7 +290,7 @@ export const KANJI_N5: KanjiCard[] = [
     kunyomi: ["とし"],
     commonReadings: ["ねん", "とし"],
     examples: [
-      { word: "年上", reading: "としうえ", meaning: "Tua" },
+      { word: "年上", reading: "としうえ", meaning: "tua" },
       { word: "年齢", reading: "ねんれい", meaning: "umur" },
       { word: "青年", reading: "せいねん", meaning: "pemuda" },
     ],
@@ -665,9 +665,9 @@ export const KANJI_N5: KanjiCard[] = [
     kunyomi: ["うつる", "うつす", "はえる"],
     commonReadings: ["えい", "うつる"],
     examples: [
-      { word: "映画", reading: "えいが", meaning: "FILM" },
+      { word: "映画", reading: "えいが", meaning: "film" },
       { word: "反映", reading: "はんえい", meaning: "pantulan (cahaya)" },
-      { word: "映画館", reading: "えいがかん", meaning: "BIOSKOP" },
+      { word: "映画館", reading: "えいがかん", meaning: "bioskop" },
     ],
   },
   {
@@ -680,7 +680,7 @@ export const KANJI_N5: KanjiCard[] = [
     kunyomi: ["えがく", "かくする", "かぎる"],
     commonReadings: ["が", "えがく"],
     examples: [
-      { word: "映画", reading: "えいが", meaning: "FILM" },
+      { word: "映画", reading: "えいが", meaning: "film" },
       { word: "邦画", reading: "ほうが", meaning: "film Jepang" },
       { word: "原画", reading: "げんが", meaning: "gambar asli" },
     ],
@@ -727,7 +727,7 @@ export const KANJI_N5: KanjiCard[] = [
     examples: [
       { word: "子牛", reading: "こうし", meaning: "anak sapi" },
       { word: "牛乳", reading: "ぎゅうにゅう", meaning: "susu sapi" },
-      { word: "牛肉", reading: "ぎゅうにく", meaning: "DAGING SAPI" },
+      { word: "牛肉", reading: "ぎゅうにく", meaning: "daging sapi" },
     ],
   },
   {
@@ -832,7 +832,7 @@ export const KANJI_N5: KanjiCard[] = [
     examples: [
       { word: "真空", reading: "しんくう", meaning: "vakum" },
       { word: "空手", reading: "からて", meaning: "karate" },
-      { word: "空港", reading: "くうこう", meaning: "BANDARA" },
+      { word: "空港", reading: "くうこう", meaning: "bandara" },
     ],
   },
   {
@@ -951,7 +951,7 @@ export const KANJI_N5: KanjiCard[] = [
     examples: [
       { word: "部族", reading: "ぶぞく", meaning: "suku" },
       { word: "胸部", reading: "きょうぶ", meaning: "dada" },
-      { word: "部屋", reading: "へや", meaning: "KAMAR" },
+      { word: "部屋", reading: "へや", meaning: "kamar" },
     ],
   },
   {
@@ -965,7 +965,7 @@ export const KANJI_N5: KanjiCard[] = [
     commonReadings: ["おく", "や"],
     examples: [
       { word: "屋根", reading: "やね", meaning: "atap" },
-      { word: "部屋", reading: "へや", meaning: "KAMAR" },
+      { word: "部屋", reading: "へや", meaning: "kamar" },
       { word: "質屋", reading: "しちや", meaning: "pegadaian" },
     ],
   },
@@ -995,7 +995,7 @@ export const KANJI_N5: KanjiCard[] = [
     commonReadings: ["ち", "いけ"],
     examples: [
       { word: "電池", reading: "でんち", meaning: "baterai, sel" },
-      { word: "乾電池", reading: "かんでんち", meaning: "BATERAI" },
+      { word: "乾電池", reading: "かんでんち", meaning: "baterai" },
       { word: "太陽電池", reading: "たいようでんち", meaning: "sel surya" },
     ],
   },
@@ -1159,7 +1159,7 @@ export const KANJI_N5: KanjiCard[] = [
     kunyomi: ["くる", "きたる", "きたす"],
     commonReadings: ["らい", "くる"],
     examples: [
-      { word: "来る", reading: "くる", meaning: "Datang" },
+      { word: "来る", reading: "くる", meaning: "datang" },
       { word: "再来", reading: "さいらい", meaning: "kembali" },
       { word: "未来", reading: "みらい", meaning: "masa depan" },
     ],
@@ -1189,7 +1189,7 @@ export const KANJI_N5: KanjiCard[] = [
     kunyomi: ["うえ", "うわ"],
     commonReadings: ["じょう", "うえ"],
     examples: [
-      { word: "年上", reading: "としうえ", meaning: "Tua" },
+      { word: "年上", reading: "としうえ", meaning: "tua" },
       { word: "至上", reading: "しじょう", meaning: "supremasi" },
       { word: "上唇", reading: "うわくちびる", meaning: "bibir atas" },
     ],
@@ -1384,7 +1384,7 @@ export const KANJI_N5: KanjiCard[] = [
     kunyomi: ["たかい", "たか", "だか"],
     commonReadings: ["こう", "たかい"],
     examples: [
-      { word: "高校", reading: "こうこう", meaning: "SMA" },
+      { word: "高校", reading: "こうこう", meaning: "sma" },
       { word: "高給", reading: "こうきゅう", meaning: "gaji tinggi" },
       { word: "高温", reading: "こうおん", meaning: "suhu tinggi" },
     ],
@@ -1399,7 +1399,7 @@ export const KANJI_N5: KanjiCard[] = [
     kunyomi: ["やすい", "やすまる", "やす"],
     commonReadings: ["あん", "やすい"],
     examples: [
-      { word: "安心", reading: "あんしん", meaning: "LEGA" },
+      { word: "安心", reading: "あんしん", meaning: "lega" },
       { word: "安易", reading: "あんい", meaning: "mudah" },
       { word: "安全", reading: "あんぜん", meaning: "keamanan" },
     ],
@@ -1489,7 +1489,7 @@ export const KANJI_N5: KanjiCard[] = [
     kunyomi: ["よわい", "よわる", "よわまる"],
     commonReadings: ["じゃく", "よわい"],
     examples: [
-      { word: "弱い", reading: "よわい", meaning: "Lemah" },
+      { word: "弱い", reading: "よわい", meaning: "lemah" },
       { word: "弱める", reading: "よわめる", meaning: "melemahkan" },
     ],
   },
@@ -1518,8 +1518,8 @@ export const KANJI_N5: KanjiCard[] = [
     kunyomi: ["あつい"],
     commonReadings: ["しょ", "あつい"],
     examples: [
-      { word: "暑い", reading: "あつい", meaning: "panas (cuaca); Panas (Suhu)" },
-      { word: "蒸し暑い", reading: "むしあつい", meaning: "Panas tanpa angin" },
+      { word: "暑い", reading: "あつい", meaning: "panas (cuaca); panas (suhu)" },
+      { word: "蒸し暑い", reading: "むしあつい", meaning: "panas tanpa angin" },
     ],
   },
   {
@@ -1534,7 +1534,7 @@ export const KANJI_N5: KanjiCard[] = [
     examples: [
       { word: "寒さ", reading: "さむさ", meaning: "dingin" },
       { word: "寒波", reading: "かんぱ", meaning: "gelombang dingin" },
-      { word: "寒い", reading: "さむい", meaning: "dingin (cuaca); Dingin (Suhu)" },
+      { word: "寒い", reading: "さむい", meaning: "dingin (cuaca); dingin (suhu)" },
     ],
   },
   {
@@ -1548,7 +1548,7 @@ export const KANJI_N5: KanjiCard[] = [
     commonReadings: ["た", "おおい"],
     examples: [
       { word: "多様", reading: "たよう", meaning: "beragam" },
-      { word: "多い", reading: "おおい", meaning: "Banyak (Orang)" },
+      { word: "多い", reading: "おおい", meaning: "banyak (orang)" },
       { word: "多湿", reading: "たしつ", meaning: "kelembapan tinggi" },
     ],
   },
@@ -1667,7 +1667,7 @@ export const KANJI_N5: KanjiCard[] = [
     examples: [
       { word: "切符", reading: "きっぷ", meaning: "tiket" },
       { word: "切手", reading: "きって", meaning: "perangko" },
-      { word: "切る", reading: "きる", meaning: "Memotong" },
+      { word: "切る", reading: "きる", meaning: "memotong" },
     ],
   },
   {
