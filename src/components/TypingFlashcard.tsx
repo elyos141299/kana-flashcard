@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import type { KanaCard } from "../data/kana/index.js";
 import type { KanjiCard } from "../data/kanji/index.js";
+import type { VocabCard } from "../data/vocab/index.js";
 import type { Rating } from "../srs/types.js";
 import { stopSpeaking } from "../audio/index.js";
 import { checkTypingAnswer, type TypingCheckResult } from "../study/typing.js";
@@ -9,6 +10,7 @@ import { SOURCE_LABELS } from "../queue/index.js";
 import { CardActions } from "./CardActions.js";
 import { KanaBack } from "./Flashcard.js";
 import { KanjiBack } from "./KanjiFlashcard.js";
+import { VocabBack } from "./VocabFlashcard.js";
 
 /**
  * Typing Recall (Phase 15): user mengetik jawaban sebelum melihat hasil.
@@ -222,6 +224,45 @@ export function TypingKanjiCard({
       onCheck={onCheck}
       onRate={onRate}
       back={<KanjiBack card={card} />}
+    />
+  );
+}
+
+/**
+ * Typing Recall untuk Vocabulary: prompt = arti Indonesia,
+ * user mengetik kata Jepang. Expected answer = word (strict).
+ * Tidak menerima altForms/source forms sebagai jawaban.
+ */
+export function TypingVocabCard({
+  card,
+  index,
+  total,
+  prompt,
+  source,
+  onCheck,
+  onRate,
+}: {
+  card: VocabCard;
+  index: number;
+  total: number;
+  prompt: string;
+  source?: CardSource;
+  onCheck: (correct: boolean) => void;
+  onRate: (rating: Rating) => void;
+}) {
+  return (
+    <TypingShell
+      cardId={card.id}
+      kicker={`Vocabulary ${card.level} · ${index + 1} / ${total}`}
+      source={source}
+      prompt={prompt}
+      promptSub="Ketik kata Jepangnya"
+      promptLangJa={false}
+      inputAriaLabel="Ketik kata Jepang yang dimaksud"
+      expectedAnswer={card.word}
+      onCheck={onCheck}
+      onRate={onRate}
+      back={<VocabBack card={card} />}
     />
   );
 }
