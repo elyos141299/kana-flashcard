@@ -1076,3 +1076,340 @@
   outline: 2px solid var(--indigo);
   outline-offset: 2px;
 }
+
+/* ============ Reference Tables ============ */
+
+.page-subtitle {
+  font-size: 13px;
+  color: var(--ink-soft);
+  margin: 0 0 16px;
+}
+
+.ref-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.ref-tab {
+  flex: 1;
+  padding: 10px 8px;
+  min-height: 44px;
+  border: 1px solid var(--hairline);
+  border-radius: 10px;
+  background: var(--surface);
+  color: var(--ink);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.ref-tab.active {
+  background: var(--ink);
+  color: var(--surface);
+  border-color: var(--ink);
+}
+
+.ref-subtabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+
+.ref-subtab {
+  padding: 8px 16px;
+  min-height: 44px;
+  border: 1px solid var(--hairline);
+  background: var(--surface);
+  color: var(--ink);
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.ref-subtab.script-hiragana { border-radius: 999px; }
+.ref-subtab.script-katakana { border-radius: 6px; }
+.ref-subtab:not(.script-hiragana):not(.script-katakana) { border-radius: 8px; }
+
+.ref-subtab.active {
+  border-color: var(--ink);
+  font-weight: 600;
+}
+
+.ref-subtab.script-hiragana.active {
+  border-left: 3px solid var(--vermilion);
+}
+
+.ref-subtab.script-katakana.active {
+  border-left: 3px solid var(--indigo);
+}
+
+.ref-search {
+  margin-bottom: 16px;
+}
+
+.ref-search-input {
+  width: 100%;
+  padding: 10px 14px;
+  min-height: 44px;
+  border: 1px solid var(--hairline);
+  border-radius: 10px;
+  background: var(--surface);
+  color: var(--ink);
+  font-size: 15px;
+}
+
+.ref-group-title {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  margin: 20px 0 10px;
+}
+
+/* Kana grid */
+.kana-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.kana-cell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px 4px;
+  border: 1px solid var(--hairline);
+  border-radius: 10px;
+  background: var(--surface);
+  min-height: 44px;
+}
+
+.kana-char {
+  font-size: 24px;
+  line-height: 1.2;
+}
+
+.kana-romaji {
+  font-size: 12px;
+  color: var(--ink-soft);
+  margin-top: 2px;
+}
+
+.kana-cell .audio-btn-sm {
+  margin-top: 4px;
+  /* Fixed width mencegah layout shift saat teks berubah "Putar" → "Memutar..." */
+  min-width: 76px;
+  max-width: 76px;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+/* Reference rows (Kanji/Vocab) */
+.ref-row {
+  border: 1px solid var(--hairline);
+  border-radius: 10px;
+  background: var(--surface);
+  margin-bottom: 8px;
+  overflow: hidden;
+}
+
+.ref-row-main {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  grid-template-areas:
+    "jp reading chevron"
+    "jp meaning chevron"
+    "jp meta chevron";
+  gap: 2px 12px;
+  width: 100%;
+  padding: 12px 14px;
+  min-height: 44px;
+  border: none;
+  background: none;
+  color: var(--ink);
+  text-align: left;
+  cursor: pointer;
+  align-items: center;
+}
+
+.ref-row-jp {
+  grid-area: jp;
+  font-size: 28px;
+  line-height: 1.2;
+}
+
+.ref-row-reading {
+  grid-area: reading;
+  font-size: 14px;
+  color: var(--ink);
+}
+
+.ref-alt-reading {
+  color: var(--ink-soft);
+  font-size: 13px;
+}
+
+.ref-row-meaning {
+  grid-area: meaning;
+  font-size: 13px;
+  color: var(--ink-soft);
+}
+
+.ref-row-meta {
+  grid-area: meta;
+  font-size: 11px;
+  color: var(--ink-soft);
+  letter-spacing: 0.04em;
+}
+
+.ref-row-chevron {
+  grid-area: chevron;
+  font-size: 16px;
+  color: var(--ink-soft);
+}
+
+.ref-row-detail {
+  border-top: 1px solid var(--hairline);
+  padding: 14px;
+}
+
+.ref-detail-list {
+  margin: 0 0 12px;
+}
+
+.ref-detail-list > div {
+  display: grid;
+  grid-template-columns: 80px 1fr;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.ref-detail-list dt {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ink-soft);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.ref-detail-list dd {
+  margin: 0;
+  font-size: 14px;
+}
+
+.ref-example {
+  margin-bottom: 8px;
+  padding: 8px;
+  background: var(--washi-soft);
+  border-radius: 8px;
+}
+
+.ref-example-reading {
+  font-size: 13px;
+  color: var(--ink-soft);
+}
+
+.ref-empty {
+  text-align: center;
+  color: var(--ink-soft);
+  padding: 32px 16px;
+}
+
+.ref-count {
+  text-align: center;
+  font-size: 13px;
+  color: var(--ink-soft);
+  margin-top: 16px;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ============ Reference Horizontal Tables ============ */
+
+.ref-table-wrapper {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin: 0 -16px;
+  padding: 0 16px;
+}
+
+.ref-table {
+  width: 100%;
+  min-width: 640px;
+  border-collapse: collapse;
+  font-size: 14px;
+  background: var(--surface);
+}
+
+.ref-table thead th {
+  background: var(--vermilion);
+  color: #fff;
+  font-weight: 600;
+  font-size: 13px;
+  padding: 10px 12px;
+  text-align: left;
+  white-space: nowrap;
+  position: sticky;
+  top: 0;
+}
+
+.ref-table tbody td {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--hairline);
+  vertical-align: top;
+}
+
+.ref-table tbody tr:nth-child(even) {
+  background: color-mix(in srgb, var(--washi-soft) 50%, transparent);
+}
+
+.ref-td-num {
+  text-align: center;
+  color: var(--ink-soft);
+  white-space: nowrap;
+  width: 40px;
+}
+
+.ref-td-kanji {
+  font-size: 20px;
+  white-space: nowrap;
+}
+
+.ref-td-kana {
+  font-size: 13px;
+  color: var(--ink-soft);
+}
+
+.ref-td-meta {
+  font-size: 12px;
+  color: var(--ink-soft);
+  white-space: nowrap;
+}
+
+.ref-td-examples {
+  min-width: 200px;
+  max-width: 320px;
+}
+
+.ref-table-example {
+  margin-bottom: 6px;
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.ref-table-example:last-child {
+  margin-bottom: 0;
+}
