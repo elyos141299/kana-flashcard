@@ -519,6 +519,60 @@
   color: var(--ink-soft);
 }
 
+/* Script badge: visual distinction Hiragana vs Katakana.
+   Primary cue: label + shape. Color is secondary only. */
+.script-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 12px 4px 6px;
+  font-size: 14px;
+  color: var(--ink);
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+}
+
+.script-badge-glyph {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  font-size: 16px;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+/* Hiragana: rounded, soft — vermilion accent (secondary cue) */
+.script-hiragana {
+  border-radius: 999px;
+  border-left: 3px solid var(--vermilion);
+}
+
+.script-hiragana .script-badge-glyph {
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--vermilion) 12%, transparent);
+  color: var(--vermilion);
+}
+
+/* Katakana: angular, sharp — indigo accent (secondary cue) */
+.script-katakana {
+  border-radius: 6px;
+  border-left: 3px solid var(--indigo);
+}
+
+.script-katakana .script-badge-glyph {
+  border-radius: 4px;
+  background: color-mix(in srgb, var(--indigo) 12%, transparent);
+  color: var(--indigo);
+}
+
+.script-badge-text {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .link-btn {
   border: none;
   background: none;
