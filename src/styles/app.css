@@ -1,0 +1,430 @@
+/* Layout + komponen. Mobile-first, satu kolom, max 520px. */
+
+.app {
+  max-width: 520px;
+  margin: 0 auto;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  padding-bottom: calc(76px + env(safe-area-inset-bottom));
+}
+
+.page {
+  padding: 28px 22px;
+  animation: fadein 0.18s ease-out;
+}
+
+@keyframes fadein {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .page { animation: none; }
+  .card-inner { transition: none !important; }
+}
+
+/* Judul halaman */
+.page-title {
+  font-size: 15px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  margin: 0 0 18px;
+  font-weight: 600;
+}
+
+.brand-jp {
+  font-size: 44px;
+  margin: 8px 0 2px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+.brand-sub {
+  font-size: 16px;
+  color: var(--ink-soft);
+  margin: 0 0 26px;
+}
+
+/* Tombol utama */
+.btn {
+  display: block;
+  width: 100%;
+  min-height: var(--tap);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--ink);
+  font-family: var(--font);
+  font-size: 17px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0 18px;
+}
+
+.btn:active {
+  transform: scale(0.985);
+}
+
+.btn-primary {
+  background: var(--vermilion);
+  border-color: var(--vermilion);
+  color: #fff;
+}
+
+/* Focus indicator untuk keyboard navigation — tenang, selaras dengan desain */
+:focus-visible {
+  outline: 2px solid var(--indigo);
+  outline-offset: 2px;
+}
+
+.btn-primary:active {
+  background: var(--vermilion-deep);
+}
+
+.btn-row {
+  display: flex;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+/* Pilihan kategori / jumlah kartu */
+.choice-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 10px;
+  margin: 10px 0 22px;
+}
+
+.choice {
+  min-height: var(--tap);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--ink);
+  font-family: var(--font);
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.choice[aria-pressed="true"] {
+  border-color: var(--vermilion);
+  border-width: 2px;
+  color: var(--vermilion);
+  font-weight: 700;
+}
+
+.section-label {
+  font-size: 13px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  margin: 0 0 4px;
+  font-weight: 600;
+}
+
+/* Flashcard */
+.card-stage {
+  perspective: 800px;
+  margin: 6px 0 18px;
+}
+
+.card-inner {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  max-height: 62dvh;
+  transition: transform 0.28s ease;
+  transform-style: preserve-3d;
+  cursor: pointer;
+}
+
+.card-inner.revealed {
+  transform: rotateY(180deg);
+}
+
+.card-face {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  border: 1px solid var(--hairline);
+  border-radius: 14px;
+  background: var(--surface);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  text-align: center;
+}
+
+.card-back {
+  transform: rotateY(180deg);
+  background: var(--washi-soft);
+}
+
+.card-kicker {
+  position: absolute;
+  top: 16px;
+  left: 0;
+  right: 0;
+  font-size: 13px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+.card-char {
+  font-size: clamp(96px, 30vw, 150px);
+  line-height: 1.1;
+  font-weight: 700;
+}
+
+.card-reading {
+  margin-top: 14px;
+  font-size: 26px;
+  letter-spacing: 0.2em;
+  font-weight: 700;
+  color: var(--vermilion);
+}
+
+.card-example {
+  margin-top: 18px;
+  font-size: 20px;
+}
+
+.card-example-meaning {
+  margin-top: 4px;
+  font-size: 15px;
+  color: var(--ink-soft);
+}
+
+.card-hint {
+  position: absolute;
+  bottom: 18px;
+  font-size: 14px;
+  color: var(--ink-soft);
+}
+
+.card-note {
+  margin-top: 14px;
+  font-size: 17px;
+  color: var(--ink-soft);
+  max-width: 220px;
+}
+
+/* Kanji flashcard back */
+.kanji-back {
+  justify-content: flex-start;
+  padding-top: 52px;
+  gap: 0;
+  overflow-y: auto;
+}
+
+.card-char-sm {
+  font-size: clamp(64px, 20vw, 96px);
+}
+
+.kanji-readings {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 19px;
+}
+
+.kanji-reading-row {
+  display: flex;
+  gap: 10px;
+  align-items: baseline;
+  justify-content: center;
+}
+
+.kanji-reading-tag {
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  color: var(--ink-soft);
+  border: 1px solid var(--hairline);
+  border-radius: 4px;
+  padding: 2px 6px;
+}
+
+.kanji-meanings {
+  margin-top: 12px;
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--vermilion);
+}
+
+.kanji-examples {
+  margin-top: 14px;
+  width: 100%;
+  border-top: 1px solid var(--hairline);
+  padding-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.kanji-example-row {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.kanji-example-word {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.kanji-example-reading {
+  font-size: 14px;
+  color: var(--ink-soft);
+  font-weight: 400;
+}
+
+.kanji-example-meaning {
+  font-size: 14px;
+  color: var(--ink-soft);
+}
+
+/* Tombol rating */
+.rating-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+
+.rating-btn {
+  min-height: 60px;
+  border-radius: var(--radius);
+  border: 1px solid var(--hairline);
+  background: var(--surface);
+  color: var(--ink);
+  font-family: var(--font);
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.rating-btn:active {
+  transform: scale(0.96);
+}
+
+.rating-btn.again { color: var(--vermilion); border-color: var(--vermilion); }
+.rating-btn.hard { color: #b97f1f; }
+.rating-btn.good { color: var(--indigo); }
+.rating-btn.easy { color: #2e7d4f; }
+
+/* Progress bar sederhana */
+.meter {
+  height: 8px;
+  border-radius: 99px;
+  background: var(--washi-soft);
+  border: 1px solid var(--hairline);
+  overflow: hidden;
+  margin: 6px 0 14px;
+}
+
+.meter > div {
+  height: 100%;
+  background: var(--vermilion);
+  border-radius: 99px;
+  transition: width 0.25s ease;
+}
+
+.stat-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--hairline);
+  font-size: 16px;
+}
+
+.stat-row:last-child {
+  border-bottom: none;
+}
+
+.stat-val {
+  font-weight: 700;
+}
+
+/* Tab bar bawah */
+.tabbar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  background: var(--surface);
+  border-top: 1px solid var(--hairline);
+  padding-bottom: env(safe-area-inset-bottom);
+  z-index: 10;
+}
+
+.tabbar-inner {
+  display: flex;
+  width: 100%;
+  max-width: 520px;
+  margin: 0 auto;
+}
+
+.tab {
+  flex: 1;
+  border: none;
+  background: none;
+  color: var(--ink-soft);
+  font-family: var(--font);
+  font-size: 12px;
+  font-weight: 600;
+  padding: 10px 0 12px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  min-height: 64px;
+}
+
+.tab .tab-jp {
+  font-size: 19px;
+  line-height: 1.2;
+}
+
+.tab[aria-selected="true"] {
+  color: var(--vermilion);
+}
+
+.session-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+  font-size: 14px;
+  color: var(--ink-soft);
+}
+
+.link-btn {
+  border: none;
+  background: none;
+  color: var(--indigo);
+  font-family: var(--font);
+  font-size: 14px;
+  cursor: pointer;
+  padding: 8px;
+}
+
+.summary-big {
+  font-size: 52px;
+  font-weight: 700;
+  margin: 6px 0;
+}
+
+.divider {
+  border: none;
+  border-top: 1px solid var(--hairline);
+  margin: 22px 0;
+}

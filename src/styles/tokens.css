@@ -1,0 +1,56 @@
+/* Design tokens — Japanese minimalism. Tanpa glass, tanpa glow, tanpa shadow berat. */
+:root {
+  --washi: #faf7f0;
+  --washi-soft: #f3eee2;
+  --ink: #22211e;
+  --ink-soft: #6b675e;
+  --vermilion: #d9432f;
+  --vermilion-deep: #b23324;
+  --indigo: #2e4a6b;
+  --hairline: #e3dccb;
+  --surface: #ffffff;
+
+  --font: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Hiragino Kaku Gothic ProN",
+    "Noto Sans JP", "Yu Gothic", "Meiryo", sans-serif;
+
+  --radius: 10px;
+  --tap: 56px; /* tinggi tombol ramah jempol */
+}
+
+[data-theme="dark"] {
+  --washi: #161513;
+  --washi-soft: #1e1c19;
+  --ink: #f0ebe0;
+  --ink-soft: #a39e92;
+  --vermilion: #e4573f;
+  --vermilion-deep: #c74a34;
+  --indigo: #7d9cc4;
+  --hairline: #2e2b26;
+  --surface: #201e1b;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font);
+  background: var(--washi);
+  color: var(--ink);
+  -webkit-tap-highlight-color: transparent;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]):not([data-theme="dark"]) {
+    --washi: #161513;
+    --washi-soft: #1e1c19;
+    --ink: #f0ebe0;
+    --ink-soft: #a39e92;
+    --vermilion: #e4573f;
+    --vermilion-deep: #c74a34;
+    --indigo: #7d9cc4;
+    --hairline: #2e2b26;
+    --surface: #201e1b;
+  }
+}
