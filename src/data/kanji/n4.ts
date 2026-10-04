@@ -197,7 +197,7 @@ export const KANJI_N4: KanjiCard[] = [
     kunyomi: ["うれしい", "たのしむ"],
     commonReadings: ["き", "うれしい"],
     examples: [
-      { word: "嬉しい", reading: "うれしい", meaning: "Senang" },
+      { word: "嬉しい", reading: "うれしい", meaning: "senang" },
     ],
   },
   {
@@ -212,7 +212,7 @@ export const KANJI_N4: KanjiCard[] = [
     examples: [
       { word: "悲願", reading: "ひがん", meaning: "harapan terbesar" },
       { word: "悲鳴", reading: "ひめい", meaning: "jeritan, teriakan" },
-      { word: "悲しい", reading: "かなしい", meaning: "SEDIH; Sedih" },
+      { word: "悲しい", reading: "かなしい", meaning: "sedih" },
     ],
   },
   {
@@ -225,9 +225,9 @@ export const KANJI_N4: KanjiCard[] = [
     kunyomi: ["きらう", "きらい", "いや"],
     commonReadings: ["けん", "きらう"],
     examples: [
-      { word: "嫌な", reading: "いやな", meaning: "TIDAK MENYENANGKAN" },
+      { word: "嫌な", reading: "いやな", meaning: "tidak menyenangkan" },
       { word: "嫌疑", reading: "けんぎ", meaning: "kecurigaan (tindak kejahatan)" },
-      { word: "嫌います", reading: "きらいます", meaning: "MEMBENCI" },
+      { word: "嫌います", reading: "きらいます", meaning: "membenci" },
     ],
   },
   {
@@ -269,7 +269,7 @@ export const KANJI_N4: KanjiCard[] = [
     commonReadings: ["りょう", "すずしい"],
     examples: [
       { word: "清涼", reading: "せいりょう", meaning: "sejuk, menyegarkan" },
-      { word: "涼しい", reading: "すずしい", meaning: "Sejuk" },
+      { word: "涼しい", reading: "すずしい", meaning: "sejuk" },
     ],
   },
   {
@@ -298,7 +298,7 @@ export const KANJI_N4: KanjiCard[] = [
     commonReadings: ["けい", "かるい"],
     examples: [
       { word: "軽量", reading: "けいりょう", meaning: "ringan" },
-      { word: "軽い", reading: "かるい", meaning: "Ringan" },
+      { word: "軽い", reading: "かるい", meaning: "ringan" },
       { word: "軽傷", reading: "けいしょう", meaning: "luka ringan" },
     ],
   },
@@ -312,7 +312,7 @@ export const KANJI_N4: KanjiCard[] = [
     kunyomi: ["ひくい", "ひくめる", "ひくまる"],
     commonReadings: ["てい", "ひくい"],
     examples: [
-      { word: "低い", reading: "ひくい", meaning: "Rendah" },
+      { word: "低い", reading: "ひくい", meaning: "rendah" },
       { word: "低温", reading: "ていおん", meaning: "suhu rendah" },
       { word: "低利", reading: "ていり", meaning: "bunga rendah" },
     ],
@@ -328,7 +328,7 @@ export const KANJI_N4: KanjiCard[] = [
     commonReadings: ["き", "あぶない"],
     examples: [
       { word: "危険", reading: "きけん", meaning: "bahaya; BAHAYA" },
-      { word: "危ない", reading: "あぶない", meaning: "Bahaya" },
+      { word: "危ない", reading: "あぶない", meaning: "bahaya" },
       { word: "危うく", reading: "あやうく", meaning: "hampir tidak" },
     ],
   },
@@ -387,7 +387,7 @@ export const KANJI_N4: KanjiCard[] = [
     kunyomi: ["のる", "のり", "のせる"],
     commonReadings: ["じょう", "のる"],
     examples: [
-      { word: "乗る", reading: "のる", meaning: "Naik" },
+      { word: "乗る", reading: "のる", meaning: "naik" },
       { word: "乗客", reading: "じょうきゃく", meaning: "penumpang" },
       { word: "分乗", reading: "ぶんじょう", meaning: "naik terpisah" },
     ],
@@ -419,7 +419,7 @@ export const KANJI_N4: KanjiCard[] = [
     examples: [
       { word: "領事", reading: "りょうじ", meaning: "konsul" },
       { word: "有事", reading: "ゆうじ", meaning: "darurat" },
-      { word: "用事", reading: "ようじ", meaning: "KEPERLUAN" },
+      { word: "用事", reading: "ようじ", meaning: "keperluan" },
     ],
   },
   {
@@ -433,8 +433,8 @@ export const KANJI_N4: KanjiCard[] = [
     commonReadings: ["し", "つかえる"],
     examples: [
       { word: "仕手", reading: "して", meaning: "pelaku, pemain" },
-      { word: "仕舞う", reading: "しまう", meaning: "Menyimpan" },
-      { word: "仕事する", reading: "しごとする", meaning: "Bekerja ( melakukan pekerjaan )" },
+      { word: "仕舞う", reading: "しまう", meaning: "menyimpan" },
+      { word: "仕事する", reading: "しごとする", meaning: "bekerja (melakukan pekerjaan)" },
     ],
   },
   {
@@ -477,7 +477,7 @@ export const KANJI_N4: KanjiCard[] = [
     kunyomi: ["すむ", "すまう", "ずまい"],
     commonReadings: ["じゅう", "すむ"],
     examples: [
-      { word: "住む", reading: "すむ", meaning: "Tinggal" },
+      { word: "住む", reading: "すむ", meaning: "tinggal" },
       { word: "永住", reading: "えいじゅう", meaning: "tempat tinggal tetap" },
       { word: "住専", reading: "じゅうせん", meaning: "perusahaan kredit perumahan" },
     ],
@@ -596,7 +596,7 @@ export const KANJI_N4: KanjiCard[] = [
     commonReadings: ["べん", "つとめる"],
     examples: [
       { word: "勉強", reading: "べんきょう", meaning: "belajar" },
-      { word: "勉強する", reading: "べんきょうする", meaning: "Belajar" },
+      { word: "勉強する", reading: "べんきょうする", meaning: "belajar" },
     ],
   },
   {
@@ -656,7 +656,7 @@ export const KANJI_N4: KanjiCard[] = [
     examples: [
       { word: "図書", reading: "としょ", meaning: "buku" },
       { word: "書物", reading: "しょもつ", meaning: "buku" },
-      { word: "辞書", reading: "じしょ", meaning: "KAMUS" },
+      { word: "辞書", reading: "じしょ", meaning: "kamus" },
     ],
   },
   {
@@ -686,7 +686,7 @@ export const KANJI_N4: KanjiCard[] = [
     examples: [
       { word: "上申", reading: "じょうしん", meaning: "laporan kepada atasan" },
       { word: "申し訳", reading: "もうしわけ", meaning: "permintaan maaf, alasan" },
-      { word: "申し込む", reading: "もうしこむ", meaning: "Mendaftakan diri" },
+      { word: "申し込む", reading: "もうしこむ", meaning: "mendaftarkan diri" },
     ],
   },
   {
@@ -744,7 +744,7 @@ export const KANJI_N4: KanjiCard[] = [
     kunyomi: ["はやい", "はや"],
     commonReadings: ["そう", "はやい"],
     examples: [
-      { word: "早い", reading: "はやい", meaning: "Cepat" },
+      { word: "早い", reading: "はやい", meaning: "cepat" },
       { word: "早期", reading: "そうき", meaning: "tahap awal" },
       { word: "最早", reading: "もはや", meaning: "sudah, kini" },
     ],
@@ -791,7 +791,7 @@ export const KANJI_N4: KanjiCard[] = [
     examples: [
       { word: "黒板", reading: "こくばん", meaning: "papan tulis" },
       { word: "甲板", reading: "かんぱん", meaning: "dek (kapal)" },
-      { word: "看板", reading: "かんばん", meaning: "PAPAN REKLAME" },
+      { word: "看板", reading: "かんばん", meaning: "papan reklame" },
     ],
   },
   {
@@ -834,7 +834,7 @@ export const KANJI_N4: KanjiCard[] = [
     examples: [
       { word: "歌謡", reading: "かよう", meaning: "lagu" },
       { word: "歌劇", reading: "かげき", meaning: "opera" },
-      { word: "歌手", reading: "かしゅ", meaning: "PENYANYI" },
+      { word: "歌手", reading: "かしゅ", meaning: "penyanyi" },
     ],
   },
   {
@@ -849,7 +849,7 @@ export const KANJI_N4: KanjiCard[] = [
     examples: [
       { word: "禁止", reading: "きんし", meaning: "larangan" },
       { word: "防止", reading: "ぼうし", meaning: "pencegahan" },
-      { word: "中止", reading: "ちゅうし", meaning: "PEMBERHENTIAN / PEMBATALAN" },
+      { word: "中止", reading: "ちゅうし", meaning: "pemberhentian / pembatalan" },
     ],
   },
   {
@@ -893,7 +893,7 @@ export const KANJI_N4: KanjiCard[] = [
     commonReadings: ["ほ", "あるく"],
     examples: [
       { word: "歩み", reading: "あゆみ", meaning: "langkah" },
-      { word: "歩く", reading: "あるく", meaning: "Berjalan" },
+      { word: "歩く", reading: "あるく", meaning: "berjalan" },
       { word: "散歩", reading: "さんぽ", meaning: "jalan-jalan" },
     ],
   },
@@ -937,7 +937,7 @@ export const KANJI_N4: KanjiCard[] = [
     kunyomi: ["おさめる", "おさまる", "なおる"],
     commonReadings: ["じ", "おさめる"],
     examples: [
-      { word: "治る", reading: "なおる", meaning: "Sembuh" },
+      { word: "治る", reading: "なおる", meaning: "sembuh" },
       { word: "治験", reading: "ちけん", meaning: "uji klinis" },
       { word: "完治", reading: "かんち", meaning: "sembuh total" },
     ],
@@ -967,9 +967,9 @@ export const KANJI_N4: KanjiCard[] = [
     kunyomi: ["なく"],
     commonReadings: ["きゅう", "なく"],
     examples: [
-      { word: "泣く", reading: "なく", meaning: "Menangis" },
+      { word: "泣く", reading: "なく", meaning: "menangis" },
       { word: "泣き", reading: "なき", meaning: "tangisan, meratap" },
-      { word: "泣き声", reading: "なきごえ", meaning: "SUARA TANGIS" },
+      { word: "泣き声", reading: "なきごえ", meaning: "suara tangis" },
     ],
   },
   {
@@ -984,7 +984,7 @@ export const KANJI_N4: KanjiCard[] = [
     examples: [
       { word: "水泳", reading: "すいえい", meaning: "berenang" },
       { word: "泳ぎ", reading: "およぎ", meaning: "berenang" },
-      { word: "泳ぐ", reading: "およぐ", meaning: "Berenang" },
+      { word: "泳ぐ", reading: "およぐ", meaning: "berenang" },
     ],
   },
   {
@@ -1014,7 +1014,7 @@ export const KANJI_N4: KanjiCard[] = [
     examples: [
       { word: "洗面", reading: "せんめん", meaning: "mencuci muka" },
       { word: "洗濯", reading: "せんたく", meaning: "mencuci, cucian" },
-      { word: "洗う", reading: "あらう", meaning: "Mencuci (Barang)" },
+      { word: "洗う", reading: "あらう", meaning: "mencuci (barang)" },
     ],
   },
   {
@@ -1043,7 +1043,7 @@ export const KANJI_N4: KanjiCard[] = [
     commonReadings: ["しょう", "きえる"],
     examples: [
       { word: "消防", reading: "しょうぼう", meaning: "pemadaman kebakaran" },
-      { word: "消す", reading: "けす", meaning: "Menghapus / memadamkan" },
+      { word: "消す", reading: "けす", meaning: "menghapus / memadamkan" },
       { word: "消費税", reading: "しょうひぜい", meaning: "pajak konsumsi" },
     ],
   },
@@ -1057,7 +1057,7 @@ export const KANJI_N4: KanjiCard[] = [
     kunyomi: ["わたる", "わたす"],
     commonReadings: ["と", "わたる"],
     examples: [
-      { word: "渡る", reading: "わたる", meaning: "Menyeberang" },
+      { word: "渡る", reading: "わたる", meaning: "menyeberang" },
       { word: "過渡", reading: "かと", meaning: "penyeberangan, feri" },
       { word: "刃渡り", reading: "はわたり", meaning: "panjang bilah" },
     ],
@@ -1102,7 +1102,7 @@ export const KANJI_N4: KanjiCard[] = [
     kunyomi: ["みなと"],
     commonReadings: ["こう", "みなと"],
     examples: [
-      { word: "空港", reading: "くうこう", meaning: "BANDARA" },
+      { word: "空港", reading: "くうこう", meaning: "bandara" },
       { word: "香港", reading: "ホンコン", meaning: "Hong Kong" },
       { word: "港湾", reading: "こうわん", meaning: "pelabuhan" },
     ],
@@ -1176,7 +1176,7 @@ export const KANJI_N4: KanjiCard[] = [
     examples: [
       { word: "灯台", reading: "とうだい", meaning: "mercusuar" },
       { word: "電灯", reading: "でんとう", meaning: "lampu listrik" },
-      { word: "点灯する", reading: "てんとうする", meaning: "Menyalakan Alarm" },
+      { word: "点灯する", reading: "てんとうする", meaning: "menyalakan alarm" },
     ],
   },
   {
@@ -1221,7 +1221,7 @@ export const KANJI_N4: KanjiCard[] = [
     examples: [
       { word: "燃焼", reading: "ねんしょう", meaning: "pembakaran" },
       { word: "焼死", reading: "しょうし", meaning: "mati terbakar" },
-      { word: "焼く", reading: "やく", meaning: "Memanggang / membakar" },
+      { word: "焼く", reading: "やく", meaning: "memanggang / membakar" },
     ],
   },
   {
@@ -1325,7 +1325,7 @@ export const KANJI_N4: KanjiCard[] = [
     commonReadings: ["とく", "える"],
     examples: [
       { word: "説得", reading: "せっとく", meaning: "bujukan" },
-      { word: "得る", reading: "える", meaning: "Menerima (Penghargaan)" },
+      { word: "得る", reading: "える", meaning: "menerima (penghargaan)" },
       { word: "所得", reading: "しょとく", meaning: "pendapatan, penghasilan" },
     ],
   },
@@ -1340,7 +1340,7 @@ export const KANJI_N4: KanjiCard[] = [
     commonReadings: ["たい", "まつ"],
     examples: [
       { word: "招待", reading: "しょうたい", meaning: "undangan" },
-      { word: "待つ", reading: "まつ", meaning: "Menunggu" },
+      { word: "待つ", reading: "まつ", meaning: "menunggu" },
       { word: "待合室", reading: "まちあいしつ", meaning: "ruang tunggu" },
     ],
   },
@@ -1384,7 +1384,7 @@ export const KANJI_N4: KanjiCard[] = [
     commonReadings: ["でん", "つたわる"],
     examples: [
       { word: "自伝", reading: "じでん", meaning: "otobiografi" },
-      { word: "伝言", reading: "でんごん", meaning: "PESAN (LISAN)" },
+      { word: "伝言", reading: "でんごん", meaning: "pesan (lisan)" },
       { word: "評伝", reading: "ひょうでん", meaning: "biografi kritis" },
     ],
   },
@@ -1398,7 +1398,7 @@ export const KANJI_N4: KanjiCard[] = [
     kunyomi: ["はたらく"],
     commonReadings: ["どう", "はたらく"],
     examples: [
-      { word: "働く", reading: "はたらく", meaning: "Bekerja" },
+      { word: "働く", reading: "はたらく", meaning: "bekerja" },
       { word: "労働者", reading: "ろうどうしゃ", meaning: "pekerja" },
       { word: "労働省", reading: "ろうどうしょう", meaning: "kementerian tenaga kerja" },
     ],
@@ -1457,7 +1457,7 @@ export const KANJI_N4: KanjiCard[] = [
     commonReadings: ["そつ", "そっする"],
     examples: [
       { word: "学卒", reading: "がくそつ", meaning: "lulusan perguruan tinggi" },
-      { word: "卒業します", reading: "そつぎょうします", meaning: "TAMAT / LULUS SEKOLAH" },
+      { word: "卒業します", reading: "そつぎょうします", meaning: "tamat / lulus sekolah" },
     ],
   },
   {
@@ -1472,7 +1472,7 @@ export const KANJI_N4: KanjiCard[] = [
     examples: [
       { word: "農協", reading: "のうきょう", meaning: "koperasi pertanian" },
       { word: "協奏曲", reading: "きょうそうきょく", meaning: "konserto" },
-      { word: "協力する", reading: "きょうりょくする", meaning: "Bekerja sama" },
+      { word: "協力する", reading: "きょうりょくする", meaning: "bekerja sama" },
     ],
   },
   {
@@ -1560,7 +1560,7 @@ export const KANJI_N4: KanjiCard[] = [
     kunyomi: ["とむ", "とみ"],
     commonReadings: ["ふ", "とむ"],
     examples: [
-      { word: "富士山", reading: "ふじさん", meaning: "Gunung Fuji; GUNUNG FUJI" },
+      { word: "富士山", reading: "ふじさん", meaning: "Gunung Fuji" },
       { word: "富士大学", reading: "ふじだいがく", meaning: "Universitas Fuji" },
     ],
   },
@@ -1574,7 +1574,7 @@ export const KANJI_N4: KanjiCard[] = [
     kunyomi: ["ねる", "ねかす", "いぬ"],
     commonReadings: ["しん", "ねる"],
     examples: [
-      { word: "寝る", reading: "ねる", meaning: "Tidur" },
+      { word: "寝る", reading: "ねる", meaning: "tidur" },
       { word: "寝室", reading: "しんしつ", meaning: "kamar tidur" },
       { word: "寝相", reading: "ねぞう", meaning: "posisi tidur" },
     ],
@@ -1589,7 +1589,7 @@ export const KANJI_N4: KanjiCard[] = [
     kunyomi: [],
     commonReadings: ["さつ"],
     examples: [
-      { word: "警察", reading: "けいさつ", meaning: "KANTOR POLISI" },
+      { word: "警察", reading: "けいさつ", meaning: "kantor polisi" },
       { word: "検察官", reading: "けんさつかん", meaning: "jaksa" },
       { word: "警察署", reading: "けいさつしょ", meaning: "kantor polisi" },
     ],
@@ -1604,7 +1604,7 @@ export const KANJI_N4: KanjiCard[] = [
     kunyomi: ["あいて", "こたえる", "そろい"],
     commonReadings: ["たい", "あいて"],
     examples: [
-      { word: "絶対", reading: "ぜったい", meaning: "PASTI" },
+      { word: "絶対", reading: "ぜったい", meaning: "pasti" },
       { word: "対称", reading: "たいしょう", meaning: "simetri" },
       { word: "対極", reading: "たいきょく", meaning: "antipoda" },
     ],
@@ -1650,7 +1650,7 @@ export const KANJI_N4: KanjiCard[] = [
     commonReadings: ["しょう", "まさに"],
     examples: [
       { word: "将軍", reading: "しょうぐん", meaning: "jenderal" },
-      { word: "将来", reading: "しょうらい", meaning: "MASA DEPAN" },
+      { word: "将来", reading: "しょうらい", meaning: "masa depan" },
       { word: "王将", reading: "おうしょう", meaning: "raja (shogi)" },
     ],
   },
@@ -1664,8 +1664,8 @@ export const KANJI_N4: KanjiCard[] = [
     kunyomi: ["うけたまわる", "うける"],
     commonReadings: ["しょう", "うけたまわる"],
     examples: [
-      { word: "了承する", reading: "りょうしょうする", meaning: "Mencatat, memahami" },
-      { word: "承認する", reading: "しょうにんする", meaning: "Mengesahkan / menyetujui" },
+      { word: "了承する", reading: "りょうしょうする", meaning: "mencatat, memahami" },
+      { word: "承認する", reading: "しょうにんする", meaning: "mengesahkan / menyetujui" },
     ],
   },
   {
@@ -1693,8 +1693,8 @@ export const KANJI_N4: KanjiCard[] = [
     kunyomi: ["ひろう"],
     commonReadings: ["しゅう", "ひろう"],
     examples: [
-      { word: "拾う", reading: "ひろう", meaning: "Memungut" },
-      { word: "拾います", reading: "ひろいます", meaning: "MEMUNGUT" },
+      { word: "拾う", reading: "ひろう", meaning: "memungut" },
+      { word: "拾います", reading: "ひろいます", meaning: "memungut" },
     ],
   },
   {
@@ -1709,7 +1709,7 @@ export const KANJI_N4: KanjiCard[] = [
     examples: [
       { word: "指輪", reading: "ゆびわ", meaning: "cincin" },
       { word: "親指", reading: "おやゆび", meaning: "ibu jari" },
-      { word: "指示", reading: "しじ", meaning: "PERINTAH" },
+      { word: "指示", reading: "しじ", meaning: "perintah" },
     ],
   },
   {
@@ -1722,7 +1722,7 @@ export const KANJI_N4: KanjiCard[] = [
     kunyomi: ["すてる"],
     commonReadings: ["しゃ", "すてる"],
     examples: [
-      { word: "捨てる", reading: "すてる", meaning: "Membuang" },
+      { word: "捨てる", reading: "すてる", meaning: "membuang" },
       { word: "呼び捨て", reading: "よびすて", meaning: "memanggil tanpa akhiran -san/-chan" },
       { word: "切り捨てる", reading: "きりすてる", meaning: "memotong dan membuang" },
     ],
@@ -1738,7 +1738,7 @@ export const KANJI_N4: KanjiCard[] = [
     commonReadings: ["じゅ", "さずける"],
     examples: [
       { word: "教授", reading: "きょうじゅ", meaning: "profesor" },
-      { word: "授業", reading: "じゅぎょう", meaning: "PELAJARAN" },
+      { word: "授業", reading: "じゅぎょう", meaning: "pelajaran" },
     ],
   },
   {
@@ -1751,7 +1751,7 @@ export const KANJI_N4: KanjiCard[] = [
     kunyomi: ["ほる"],
     commonReadings: ["くつ", "ほる"],
     examples: [
-      { word: "掘る", reading: "ほる", meaning: "Menggali" },
+      { word: "掘る", reading: "ほる", meaning: "menggali" },
     ],
   },
   {
@@ -1766,7 +1766,7 @@ export const KANJI_N4: KanjiCard[] = [
     examples: [
       { word: "掛け", reading: "かけ", meaning: "kredit" },
       { word: "掛け算", reading: "かけざん", meaning: "perkalian" },
-      { word: "掛ける", reading: "かける", meaning: "Memakai (kacamata)" },
+      { word: "掛ける", reading: "かける", meaning: "memakai (kacamata)" },
     ],
   },
   {
@@ -1779,7 +1779,7 @@ export const KANJI_N4: KanjiCard[] = [
     kunyomi: ["さぐる", "さがす"],
     commonReadings: ["たん", "さぐる"],
     examples: [
-      { word: "探す", reading: "さがす", meaning: "Mencari" },
+      { word: "探す", reading: "さがす", meaning: "mencari" },
       { word: "手探り", reading: "てさぐり", meaning: "meraba-raba" },
     ],
   },
@@ -1823,7 +1823,7 @@ export const KANJI_N4: KanjiCard[] = [
     kunyomi: ["えがく", "かく"],
     commonReadings: ["びょう", "えがく"],
     examples: [
-      { word: "絵を描く", reading: "えをかく", meaning: "Melukis" },
+      { word: "絵を描く", reading: "えをかく", meaning: "melukis" },
     ],
   },
   {
@@ -1850,7 +1850,7 @@ export const KANJI_N4: KanjiCard[] = [
     kunyomi: ["あげる", "あげ", "あがる"],
     commonReadings: ["よう", "あげる"],
     examples: [
-      { word: "揚げる", reading: "あげる", meaning: "Menggoreng" },
+      { word: "揚げる", reading: "あげる", meaning: "menggoreng" },
     ],
   },
   {
@@ -1863,7 +1863,7 @@ export const KANJI_N4: KanjiCard[] = [
     kunyomi: ["にぎる"],
     commonReadings: ["あく", "にぎる"],
     examples: [
-      { word: "握る", reading: "にぎる", meaning: "Menggenggam" },
+      { word: "握る", reading: "にぎる", meaning: "menggenggam" },
       { word: "握手", reading: "あくしゅ", meaning: "jabat tangan" },
       { word: "一握り", reading: "ひとにぎり", meaning: "segenggam" },
     ],
@@ -1893,9 +1893,9 @@ export const KANJI_N4: KanjiCard[] = [
     kunyomi: ["うやまう"],
     commonReadings: ["けい", "うやまう"],
     examples: [
-      { word: "尊敬", reading: "そんけい", meaning: "KEHORMATAN" },
+      { word: "尊敬", reading: "そんけい", meaning: "kehormatan" },
       { word: "敬老", reading: "けいろう", meaning: "menghormati lansia" },
-      { word: "尊敬する", reading: "そんけいする", meaning: "Menghormati" },
+      { word: "尊敬する", reading: "そんけいする", meaning: "menghormati" },
     ],
   },
   {
@@ -1953,7 +1953,7 @@ export const KANJI_N4: KanjiCard[] = [
     kunyomi: ["はらう", "はらい", "ばらい"],
     commonReadings: ["ふつ", "はらう"],
     examples: [
-      { word: "払う", reading: "はらう", meaning: "Mambayar" },
+      { word: "払う", reading: "はらう", meaning: "membayar" },
       { word: "支払う", reading: "しはらう", meaning: "membayar" },
       { word: "支払い", reading: "しはらい", meaning: "pembayaran" },
     ],
@@ -1970,7 +1970,7 @@ export const KANJI_N4: KanjiCard[] = [
     examples: [
       { word: "折衝", reading: "せっしょう", meaning: "negosiasi" },
       { word: "骨折", reading: "こっせつ", meaning: "patah tulang" },
-      { word: "折れる", reading: "おれる", meaning: "Patah" },
+      { word: "折れる", reading: "おれる", meaning: "patah" },
     ],
   },
   {
@@ -1983,7 +1983,7 @@ export const KANJI_N4: KanjiCard[] = [
     kunyomi: ["ぬく", "ぬき"],
     commonReadings: ["ばつ", "ぬく"],
     examples: [
-      { word: "抜く", reading: "ぬく", meaning: "Menarik,melepas" },
+      { word: "抜く", reading: "ぬく", meaning: "menarik, melepas" },
       { word: "海抜", reading: "かいばつ", meaning: "ketinggian di atas permukaan laut" },
       { word: "抜本的", reading: "ばっぽんてき", meaning: "drastis, radikal" },
     ],
@@ -2027,7 +2027,7 @@ export const KANJI_N4: KanjiCard[] = [
     commonReadings: ["おう", "おす"],
     examples: [
       { word: "押し", reading: "おし", meaning: "dorongan, mendorong" },
-      { word: "押す", reading: "おす", meaning: "Mendorong / menekan" },
+      { word: "押す", reading: "おす", meaning: "mendorong / menekan" },
     ],
   },
   {
@@ -2056,7 +2056,7 @@ export const KANJI_N4: KanjiCard[] = [
     examples: [
       { word: "換気", reading: "かんき", meaning: "ventilasi" },
       { word: "互換", reading: "ごかん", meaning: "persimpangan jalan tol" },
-      { word: "交換する", reading: "こうかんする", meaning: "Menukar (Mesin)" },
+      { word: "交換する", reading: "こうかんする", meaning: "menukar (mesin)" },
     ],
   },
   {
@@ -2085,7 +2085,7 @@ export const KANJI_N4: KanjiCard[] = [
     commonReadings: ["あん", "つくえ"],
     examples: [
       { word: "成案", reading: "せいあん", meaning: "rencana pasti" },
-      { word: "廃案", reading: "はいあん", meaning: "RUU yang ditolak" },
+      { word: "廃案", reading: "はいあん", meaning: "ruu yang ditolak" },
       { word: "草案", reading: "そうあん", meaning: "draf (pidato, RUU)" },
     ],
   },
@@ -2128,7 +2128,7 @@ export const KANJI_N4: KanjiCard[] = [
     examples: [
       { word: "育ち", reading: "そだち", meaning: "pertumbuhan, pembiakan" },
       { word: "性教育", reading: "せいきょういく", meaning: "pendidikan seks" },
-      { word: "育てる", reading: "そだてる", meaning: "Mengasuh/Memelihara (orang)" },
+      { word: "育てる", reading: "そだてる", meaning: "mengasuh/memelihara (orang)" },
     ],
   },
   {
@@ -2245,7 +2245,7 @@ export const KANJI_N4: KanjiCard[] = [
     commonReadings: ["おう", "おく"],
     examples: [
       { word: "奥行き", reading: "おくゆき", meaning: "kedalaman, panjang" },
-      { word: "奥さん", reading: "おくさん", meaning: "ISTRI (ORANG LAIN)" },
+      { word: "奥さん", reading: "おくさん", meaning: "istri (orang lain)" },
     ],
   },
   {
@@ -2260,7 +2260,7 @@ export const KANJI_N4: KanjiCard[] = [
     examples: [
       { word: "呼応", reading: "こおう", meaning: "saling memanggil" },
       { word: "反応", reading: "はんのう", meaning: "reaksi, tanggapan" },
-      { word: "応募する", reading: "おうぼする", meaning: "Melamar ( pekerjaan )" },
+      { word: "応募する", reading: "おうぼする", meaning: "melamar (pekerjaan)" },
     ],
   },
   {
@@ -2450,7 +2450,7 @@ export const KANJI_N4: KanjiCard[] = [
     kunyomi: ["もとめる"],
     commonReadings: ["きゅう", "もとめる"],
     examples: [
-      { word: "求める", reading: "もとめる", meaning: "Meminta" },
+      { word: "求める", reading: "もとめる", meaning: "meminta" },
       { word: "請求権", reading: "せいきゅうけん", meaning: "hak tagih" },
       { word: "求心力", reading: "きゅうしんりょく", meaning: "gaya sentripetal" },
     ],
