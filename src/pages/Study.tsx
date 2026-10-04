@@ -3,9 +3,12 @@ import type { KanaCard, KanaScript, KanaSelection } from "../data/kana/index.js"
 import { selectKana, GROUP_LABELS, KANA_GROUPS } from "../data/kana/index.js";
 import type { KanjiCard, KanjiLevel } from "../data/kanji/index.js";
 import { selectKanji } from "../data/kanji/index.js";
+import type { VocabCard, VocabLevel } from "../data/vocab/index.js";
+import { selectVocab, VOCAB_LEVELS } from "../data/vocab/index.js";
 import { Flashcard } from "../components/Flashcard.js";
 import { KanjiFlashcard } from "../components/KanjiFlashcard.js";
-import { TypingKanaCard, TypingKanjiCard } from "../components/TypingFlashcard.js";
+import { VocabFlashcard } from "../components/VocabFlashcard.js";
+import { TypingKanaCard, TypingKanjiCard, TypingVocabCard } from "../components/TypingFlashcard.js";
 import type { Rating, CardProgress } from "../srs/types.js";
 import { rateCard } from "../srs/scheduler.js";
 import { loadProgress, saveProgress, recordReview, recordCardRated, loadSettings, getDailyCounts } from "../storage/progress.js";
@@ -23,13 +26,13 @@ import type { CardSource } from "../queue/index.js";
 import { Browse } from "./Browse.js";
 
 type Phase = "setup" | "session" | "done" | "empty" | "browse";
-type Category = "hiragana" | "katakana" | "kanji";
+type Category = "hiragana" | "katakana" | "kanji" | "vocabulary";
 
 interface QueueItem {
-  card: KanaCard | KanjiCard;
+  card: KanaCard | KanjiCard | VocabCard;
   requeues: number;
   source: CardSource;
-  /** Prompt recall (romaji/reading). Undefined untuk recognition. */
+  /** Prompt recall (romaji/reading/meaning). Undefined untuk recognition. */
   prompt?: string;
 }
 
@@ -41,6 +44,7 @@ export function Study() {
   const [category, setCategory] = useState<Category>("hiragana");
   const [kanaGroup, setKanaGroup] = useState<KanaSelection>("basic");
   const [kanjiLevel, setKanjiLevel] = useState<KanjiLevel>("N5");
+  const [vocabLevel, setVocabLevel] = useState<VocabLevel>("N5");
   const [count, setCount] = useState<number>(() => loadSettings().defaultCards);
   const [studyMode, setStudyMode] = useState<StudyMode>("recognition");
   const [favoritesOnly, setFavoritesOnly] = useState(false);
@@ -62,12 +66,12 @@ export function Study() {
   /** Menyimpan apakah sesi kosong berasal dari mode favorites-only. */
   const favoritesOnlyRef = useRef(false);
 
-  const candidatePool: Array<KanaCard | KanjiCard> = useMemo(() => {
+  const candidatePool: Array<KanaCard | KanjiCard | VocabCard> = useMemo(() => {
     if (sourceMode === "mixed") return buildMixedPool(mixedSets);
-    return category === "kanji"
-      ? selectKanji(kanjiLevel)
-      : selectKana(category as KanaScript, kanaGroup);
-  }, [sourceMode, mixedSets, category, kanaGroup, kanjiLevel]);
+    if (category === "kanji") return selectKanji(kanjiLevel);
+    if (category === "vocabulary") return selectVocab(vocabLevel);
+    return selectKana(category as KanaScript, kanaGroup);
+  }, [sourceMode, mixedSets, category, kanaGroup, kanjiLevel, vocabLevel]);
 
   /** Preview queue untuk setup — dihitung ulang hanya saat input setup berubah. */
   const queuePreview = useMemo(
@@ -151,7 +155,7 @@ export function Study() {
    * Kartu tetap memakai SRS normal — tidak reset interval, tidak force due.
    * Eligibility sudah dicek di Browse (due/new, tidak suspended, limit tersedia).
    */
-  const startSingleCard = (card: KanaCard | KanjiCard, mode: StudyMode) => {
+  const startSingleCard = (card: KanaCard | KanjiCard | VocabCard, mode: StudyMode) => {
     const sc = buildSessionCard(card, mode);
     const p = loadProgress()[card.id] ?? null;
     setSessionMode(mode);
@@ -279,6 +283,9 @@ export function Study() {
           <button className="choice" aria-pressed={category === "kanji"} onClick={() => setCategory("kanji")}>
             漢 Kanji
           </button>
+          <button className="choice" aria-pressed={category === "vocabulary"} onClick={() => setCategory("vocabulary")}>
+            語 Vocabulary
+          </button>
         </div>
 
         {category === "kanji" ? (
@@ -291,6 +298,22 @@ export function Study() {
                   className="choice"
                   aria-pressed={kanjiLevel === level}
                   onClick={() => setKanjiLevel(level)}
+                >
+                  {level}
+                </button>
+              ))}
+            </div>
+          </>
+        ) : category === "vocabulary" ? (
+          <>
+            <p className="section-label">Vocabulary Level</p>
+            <div className="choice-grid">
+              {VOCAB_LEVELS.map((level) => (
+                <button
+                  key={level}
+                  className="choice"
+                  aria-pressed={vocabLevel === level}
+                  onClick={() => setVocabLevel(level)}
                 >
                   {level}
                 </button>
@@ -469,7 +492,9 @@ export function Study() {
     ? `Mixed Study · ${MODE_LABELS[sessionMode]}`
     : category === "kanji"
       ? `Kanji ${kanjiLevel} · ${MODE_LABELS[sessionMode]}`
-      : `${category === "hiragana" ? "Hiragana" : "Katakana"} · ${MODE_LABELS[sessionMode]}${kanaGroup === "all" ? "" : ` · ${GROUP_LABELS[kanaGroup as keyof typeof GROUP_LABELS]}`}`;
+      : category === "vocabulary"
+        ? `Vocabulary ${vocabLevel} · ${MODE_LABELS[sessionMode]}`
+        : `${category === "hiragana" ? "Hiragana" : "Katakana"} · ${MODE_LABELS[sessionMode]}${kanaGroup === "all" ? "" : ` · ${GROUP_LABELS[kanaGroup as keyof typeof GROUP_LABELS]}`}`;
 
   return (
     <div className="page">
@@ -477,7 +502,31 @@ export function Study() {
         <span>{sessionLabel}</span>
         <button className="link-btn" onClick={() => setPhase("setup")}>Akhiri</button>
       </div>
-      {current.card.type === "kanji" ? (
+      {current.card.type === "vocabulary" ? (
+        sessionMode === "typing-recall" ? (
+          <TypingVocabCard
+            key={current.card.id + "-" + done}
+            card={current.card}
+            index={done}
+            total={total}
+            prompt={current.prompt ?? ""}
+            source={current.source}
+            onCheck={handleCheck}
+            onRate={handleRate}
+          />
+        ) : (
+          <VocabFlashcard
+            key={current.card.id + "-" + done}
+            card={current.card}
+            index={done}
+            total={total}
+            mode={sessionMode}
+            prompt={current.prompt}
+            source={current.source}
+            onRate={handleRate}
+          />
+        )
+      ) : current.card.type === "kanji" ? (
         sessionMode === "typing-recall" ? (
           <TypingKanjiCard
             key={current.card.id + "-" + done}
