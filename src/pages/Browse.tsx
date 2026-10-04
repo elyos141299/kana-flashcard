@@ -5,6 +5,7 @@ import {
   KANJI_N5, KANJI_N4, KANJI_N3, KANJI_N2, KANJI_N1,
 } from "../data/kanji/index.js";
 import type { KanjiCard } from "../data/kanji/index.js";
+import { VOCAB_N5 } from "../data/vocab/index.js";
 import { loadProgress, loadSettings, getDailyCounts } from "../storage/progress.js";
 import { loadCardMeta } from "../storage/cardMeta.js";
 import { classifySource } from "../queue/classify.js";
@@ -17,6 +18,7 @@ import { useJapaneseAudioAvailable } from "../audio/useJapaneseAudio.js";
 import { CardActions } from "../components/CardActions.js";
 import { Flashcard } from "../components/Flashcard.js";
 import { KanjiFlashcard } from "../components/KanjiFlashcard.js";
+import { VocabFlashcard } from "../components/VocabFlashcard.js";
 import type { StudyMode } from "../study/modes.js";
 import { MODE_LABELS } from "../study/modes.js";
 import {
@@ -44,7 +46,13 @@ function allCards(): AnyCard[] {
     ...HIRAGANA_ALL,
     ...KATAKANA_ALL,
     ...KANJI_N5, ...KANJI_N4, ...KANJI_N3, ...KANJI_N2, ...KANJI_N1,
+    ...VOCAB_N5,
   ];
+}
+
+/** Karakter utama untuk display. */
+function displayChar(card: AnyCard): string {
+  return card.type === "vocabulary" ? card.word : card.character;
 }
 
 /** Badge status kecil: New / Learning / Review / Due / Suspended. */
@@ -90,6 +98,20 @@ function KanjiDetailAudio({ card }: { card: KanjiCard }) {
           <AudioButton size="sm" text={byId("kun")!.text} label={byId("kun")!.label} />
         </div>
       )}
+    </div>
+  );
+}
+
+function VocabDetailAudio({ card }: { card: { word: string; reading: string; primaryReading?: string } }) {
+  const available = useJapaneseAudioAvailable();
+  if (!available) return <p className="audio-note">🔇 Suara tidak tersedia.</p>;
+  const speakText = card.primaryReading ?? card.reading;
+  return (
+    <div className="browse-audio-rows">
+      <div className="kanji-reading-row">
+        <span lang="ja">{card.reading}</span>
+        <AudioButton size="sm" text={speakText} label={`Dengarkan ${card.word}`} />
+      </div>
     </div>
   );
 }
@@ -189,14 +211,14 @@ export function Browse({
 
           <div className="browse-filters">
             <div className="segmented" role="radiogroup" aria-label="Dataset">
-              {(["all", "kana", "kanji"] as const).map((d) => (
+              {(["all", "kana", "kanji", "vocabulary"] as const).map((d) => (
                 <label key={d} className={`segmented-btn${filters.dataset === d ? " is-active" : ""}`}>
                   <input
                     type="radio" name="browse-dataset" className="sr-only"
                     checked={filters.dataset === d}
                     onChange={() => setF({ dataset: d })}
                   />
-                  {d === "all" ? "All" : d === "kana" ? "Kana" : "Kanji"}
+                  {d === "all" ? "All" : d === "kana" ? "Kana" : d === "kanji" ? "Kanji" : "Vocab"}
                 </label>
               ))}
             </div>
@@ -260,9 +282,9 @@ export function Browse({
                       type="button"
                       className="browse-row"
                       onClick={() => setSelectedId(card.id)}
-                      aria-label={`${card.character}, ${cardSubLabel(card)}`}
+                      aria-label={`${displayChar(card)}, ${cardSubLabel(card)}`}
                     >
-                      <span className="browse-row-char" lang="ja">{card.character}</span>
+                      <span className="browse-row-char" lang="ja">{displayChar(card)}</span>
                       <span className="browse-row-main">
                         <span className="browse-row-sub">{cardSubLabel(card)}</span>
                         <StatusBadge
@@ -364,6 +386,8 @@ function CardDetail({
         </p>
         {card.type === "kanji" ? (
           <KanjiFlashcard card={card} index={0} total={1} previewOnly onRate={() => {}} />
+        ) : card.type === "vocabulary" ? (
+          <VocabFlashcard card={card} index={0} total={1} previewOnly onRate={() => {}} />
         ) : (
           <Flashcard card={card} index={0} total={1} previewOnly onRate={() => {}} />
         )}
@@ -385,7 +409,7 @@ function CardDetail({
         ← Back to list
       </button>
 
-      <div className="browse-detail-char" lang="ja">{card.character}</div>
+      <div className="browse-detail-char" lang="ja">{displayChar(card)}</div>
       <div className="browse-detail-sub">{cardSubLabel(card)}</div>
       <div className="browse-detail-status">
         <StatusBadge card={card} progress={progress} suspended={suspended} />
@@ -406,11 +430,18 @@ function CardDetail({
             </p>
           )}
         </>
-      ) : (
+      ) : card.type === "kanji" ? (
         <>
           <div className="browse-detail-meanings">{card.meanings.join(" · ")}</div>
           <div className="browse-detail-audio">
             <KanjiDetailAudio card={card} />
+          </div>
+        </>
+      ) : (
+        <>
+          <div className="browse-detail-meanings">{card.meanings.join(" · ")}</div>
+          <div className="browse-detail-audio">
+            <VocabDetailAudio card={card} />
           </div>
         </>
       )}
