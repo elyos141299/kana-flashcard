@@ -4,19 +4,26 @@ import type { Rating } from "../srs/types.js";
 import { AudioButton } from "./AudioButton.js";
 import { getKanaAudioActions, stopSpeaking } from "../audio/index.js";
 import { useJapaneseAudioAvailable } from "../audio/useJapaneseAudio.js";
+import type { StudyMode } from "../study/modes.js";
 
 /**
  * Kartu flashcard: tap untuk reveal (flip), lalu nilai Again/Hard/Good/Easy.
+ * - recognition: depan = karakter Jepang.
+ * - recall: depan = prompt (romaji), jawaban = karakter Jepang.
  */
 export function Flashcard({
   card,
   index,
   total,
+  mode = "recognition",
+  prompt,
   onRate,
 }: {
   card: KanaCard;
   index: number;
   total: number;
+  mode?: StudyMode;
+  prompt?: string;
   onRate: (rating: Rating) => void;
 }) {
   const [revealed, setRevealed] = useState(false);
@@ -47,7 +54,14 @@ export function Flashcard({
         >
           <div className="card-face card-front">
             <div className="card-kicker">{kicker}</div>
-            <div className="card-char" lang="ja">{card.character}</div>
+            {mode === "recall" && prompt ? (
+              <>
+                <div className="card-recall-tag">Recall</div>
+                <div className="card-char">{prompt}</div>
+              </>
+            ) : (
+              <div className="card-char" lang="ja">{card.character}</div>
+            )}
             {!revealed && <div className="card-hint">Ketuk untuk membuka</div>}
           </div>
           <div className="card-face card-back">

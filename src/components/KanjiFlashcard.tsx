@@ -4,20 +4,27 @@ import type { Rating } from "../srs/types.js";
 import { AudioButton } from "./AudioButton.js";
 import { getKanjiAudioActions, stopSpeaking } from "../audio/index.js";
 import { useJapaneseAudioAvailable } from "../audio/useJapaneseAudio.js";
+import type { StudyMode } from "../study/modes.js";
 
 /**
  * Flashcard Kanji: depan hanya karakter; belakang = reading + meaning + examples.
  * Satu mode: Kanji → Reading + Meaning (§10).
+ * - recognition: depan = karakter kanji.
+ * - recall: depan = prompt reading, jawaban = karakter kanji.
  */
 export function KanjiFlashcard({
   card,
   index,
   total,
+  mode = "recognition",
+  prompt,
   onRate,
 }: {
   card: KanjiCard;
   index: number;
   total: number;
+  mode?: StudyMode;
+  prompt?: string;
   onRate: (rating: Rating) => void;
 }) {
   const [revealed, setRevealed] = useState(false);
@@ -49,7 +56,14 @@ export function KanjiFlashcard({
         >
           <div className="card-face card-front">
             <div className="card-kicker">{kicker}</div>
-            <div className="card-char" lang="ja">{card.character}</div>
+            {mode === "recall" && prompt ? (
+              <>
+                <div className="card-recall-tag">Recall</div>
+                <div className="card-char" lang="ja">{prompt}</div>
+              </>
+            ) : (
+              <div className="card-char" lang="ja">{card.character}</div>
+            )}
             {!revealed && <div className="card-hint">Ketuk untuk membuka</div>}
           </div>
           <div className="card-face card-back kanji-back">

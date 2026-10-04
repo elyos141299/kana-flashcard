@@ -8,6 +8,8 @@ import { KanjiFlashcard } from "../components/KanjiFlashcard.js";
 import type { Rating, CardProgress } from "../srs/types.js";
 import { rateCard } from "../srs/scheduler.js";
 import { loadProgress, saveProgress, recordReview, loadSettings } from "../storage/progress.js";
+import type { StudyMode } from "../study/modes.js";
+import { buildSessionCard, MODE_LABELS } from "../study/modes.js";
 
 type Phase = "setup" | "session" | "done";
 type Category = "hiragana" | "katakana" | "kanji";
@@ -15,6 +17,8 @@ type Category = "hiragana" | "katakana" | "kanji";
 interface QueueItem {
   card: KanaCard | KanjiCard;
   requeues: number;
+  /** Prompt recall (romaji/reading). Undefined untuk recognition. */
+  prompt?: string;
 }
 
 const KANA_GROUP_ORDER: KanaSelection[] = [...KANA_GROUPS, "all"];
@@ -26,9 +30,12 @@ export function Study() {
   const [kanaGroup, setKanaGroup] = useState<KanaSelection>("basic");
   const [kanjiLevel, setKanjiLevel] = useState<KanjiLevel>("N5");
   const [count, setCount] = useState<number>(() => loadSettings().defaultCards);
+  const [studyMode, setStudyMode] = useState<StudyMode>("recognition");
+  const [sessionMode, setSessionMode] = useState<StudyMode>("recognition");
   const [queue, setQueue] = useState<QueueItem[]>([]);
   const [done, setDone] = useState(0);
   const [total, setTotal] = useState(0);
+  const [againCards, setAgainCards] = useState<Set<string>>(new Set());
 
   const availableCount =
     category === "kanji"
@@ -36,14 +43,22 @@ export function Study() {
       : selectKana(category as KanaScript, kanaGroup).length;
 
   const start = () => {
-    // Urutan deterministic sesuai dataset; SRS yang sama untuk kana & kanji
+    // Urutan deterministic sesuai dataset; SRS yang sama untuk kana & kanji.
+    // Mode dikunci untuk seluruh sesi; prompt recall dihitung sekali di sini.
     const cards: Array<KanaCard | KanjiCard> =
       category === "kanji"
         ? selectKanji(kanjiLevel).slice(0, count)
         : selectKana(category as KanaScript, kanaGroup).slice(0, count);
-    setQueue(cards.map((card) => ({ card, requeues: 0 })));
+    setSessionMode(studyMode);
+    setQueue(
+      cards.map((card) => {
+        const sc = buildSessionCard(card, studyMode);
+        return { card: sc.card, requeues: 0, prompt: sc.prompt };
+      }),
+    );
     setTotal(cards.length);
     setDone(0);
+    setAgainCards(new Set());
     setPhase("session");
   };
 
@@ -51,17 +66,23 @@ export function Study() {
     const [head, ...rest] = queue;
     if (!head) return;
 
-    // SRS engine menghitung jadwal; UI hanya meneruskan rating
+    // SRS engine menghitung jadwal; UI hanya meneruskan rating.
+    // Satu cardId = satu progress, apa pun modenya.
     const store = loadProgress();
     const next: CardProgress = rateCard(store[head.card.id] ?? null, head.card.id, rating);
     store[head.card.id] = next;
     saveProgress(store);
     recordReview(rating);
 
+    if (rating === "again") {
+      setAgainCards((prev) => new Set(prev).add(head.card.id));
+    }
+
     // Again: kartu masuk lagi di akhir antrian (maks 2x per sesi, §14)
+    // Prompt recall ikut terbawa agar konsisten.
     let newQueue = rest;
     if (rating === "again" && head.requeues < 2) {
-      newQueue = [...rest, { card: head.card, requeues: head.requeues + 1 }];
+      newQueue = [...rest, { card: head.card, requeues: head.requeues + 1, prompt: head.prompt }];
     }
 
     const newDone = done + 1;
@@ -134,6 +155,28 @@ export function Study() {
           ))}
         </div>
 
+        <p className="section-label" id="study-mode-label">Study Mode</p>
+        <div className="segmented" role="radiogroup" aria-labelledby="study-mode-label">
+          {(Object.keys(MODE_LABELS) as StudyMode[]).map((m) => (
+            <label key={m} className={`segmented-btn${studyMode === m ? " is-active" : ""}`}>
+              <input
+                type="radio"
+                name="study-mode"
+                value={m}
+                checked={studyMode === m}
+                onChange={() => setStudyMode(m)}
+                className="sr-only"
+              />
+              {MODE_LABELS[m]}
+            </label>
+          ))}
+        </div>
+        <p className="mode-hint">
+          {studyMode === "recognition"
+            ? "Lihat karakter Jepang, ingat bacaan/artinya."
+            : "Lihat bacaan, ingat karakter Jepangnya."}
+        </p>
+
         <button className="btn btn-primary" onClick={start}>Start</button>
         <p style={{ color: "var(--ink-soft)", fontSize: 14, marginTop: 14 }}>
           {Math.min(count, availableCount)} dari {availableCount} kartu tersedia.
@@ -148,6 +191,10 @@ export function Study() {
         <h1 className="page-title">Session Complete</h1>
         <div className="summary-big" lang="ja">終</div>
         <p style={{ fontSize: 18 }}>{done} kartu selesai direview.</p>
+        <p className="summary-line">
+          Mode: {MODE_LABELS[sessionMode]}
+          {againCards.size > 0 && ` · ${againCards.size} kartu perlu diulang`}
+        </p>
         <div className="btn-row">
           <button className="btn" onClick={() => setPhase("setup")}>Kembali</button>
           <button className="btn btn-primary" onClick={start}>Ulangi</button>
@@ -178,6 +225,8 @@ export function Study() {
           card={current.card}
           index={done}
           total={total}
+          mode={sessionMode}
+          prompt={current.prompt}
           onRate={handleRate}
         />
       ) : (
@@ -186,6 +235,8 @@ export function Study() {
           card={current.card}
           index={done}
           total={total}
+          mode={sessionMode}
+          prompt={current.prompt}
           onRate={handleRate}
         />
       )}
