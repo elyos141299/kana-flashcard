@@ -1,8 +1,9 @@
-export type TabId = "home" | "study" | "progress" | "settings";
+export type TabId = "home" | "study" | "reference" | "progress" | "settings";
 
 const TABS: Array<{ id: TabId; jp: string; label: string }> = [
   { id: "home", jp: "家", label: "Home" },
   { id: "study", jp: "学", label: "Study" },
+  { id: "reference", jp: "表", label: "Reference" },
   { id: "progress", jp: "歩", label: "Progress" },
   { id: "settings", jp: "設", label: "Settings" },
 ];
