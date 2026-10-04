@@ -48,3 +48,34 @@ dan ditunda untuk review mendatang. **Jangan diubah massal tanpa keputusan produ
 ## Future review
 - Normalisasi kapitalisasi arti contoh (perlu source valid atau keputusan produk).
 - Review reading langka/loanword seperti "だーす" untuk kelayakan pedagogis.
+
+## Sudah diperbaiki (Phase 22 — Content Localization Audit)
+
+### English candidates — hasil scan
+- Automated scan 1724 kanji (2271 meanings, 2945 example meanings):
+  0 kandidat English murni. Dataset sudah terlokalisasi dengan baik;
+  kasus "cedar" (Phase 21) adalah outlier.
+- 1 hit kata Inggris ("nilai nominal") — VALID, istilah Indonesia yang natural.
+
+### Capitalization — FIXED
+- 79 kandidat ALL-CAPS → lowercase (kecuali akronim "ASI" yang dipertahankan).
+- 146 example meaning Title Case → lowercase (proper noun dipertahankan:
+  Jepang, Eropa, Tokyo, Bima Sakti, dll.).
+- Total 204 replacements pada 183 kartu. Card ID tidak berubah.
+
+### Typo — FIXED
+- "Mendaftakan diri" → "mendaftarkan diri"
+- "Mambayar" → "membayar"
+- "Meletakan" → "meletakkan"
+- "Menyetting" → "menyetel"
+
+### Source artifacts — FIXED
+- Sense number sisa source: "Rusak ( mesin ) 2" → "rusak (mesin)",
+  "Bertanya (mengandalkan) 2" → "bertanya (mengandalkan)"
+- "saat2" → "saat-saat"; spasi kurung "( melakukan pekerjaan )" dibersihkan;
+  duplikat "SEDIH; Sedih" → "sedih".
+
+### VALID (tidak diubah)
+- Disambiguasi kurung: "panas (cuaca)", "hari (pekan)" — membantu pembelajar.
+- Prefix: "ke-" (第), "non-" (非).
+- 361 kartu N1 tanpa example — dibiarkan kosong, bukan bug.
