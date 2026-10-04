@@ -50,7 +50,6 @@ dan ditunda untuk review mendatang. **Jangan diubah massal tanpa keputusan produ
 - Review reading langka/loanword seperti "だーす" untuk kelayakan pedagogis.
 
 ## Sudah diperbaiki (Phase 22 — Content Localization Audit)
-
 ### English candidates — hasil scan
 - Automated scan 1724 kanji (2271 meanings, 2945 example meanings):
   0 kandidat English murni. Dataset sudah terlokalisasi dengan baik;
@@ -79,3 +78,26 @@ dan ditunda untuk review mendatang. **Jangan diubah massal tanpa keputusan produ
 - Disambiguasi kurung: "panas (cuaca)", "hari (pekan)" — membantu pembelajar.
 - Prefix: "ke-" (第), "non-" (非).
 - 361 kartu N1 tanpa example — dibiarkan kosong, bukan bug.
+
+## Phase 23 — Reading & Example Integrity Audit (hasil)
+
+### Automated scan (dev-only)
+- 1724 kanji, 7880 readings, 2945 examples di-scan.
+- 0 malformed reading, 0 empty, 0 duplikat identik, 0 non-kana,
+  0 raw marker, 0 commonReading di luar on/kun.
+- 5 kandidat → semua VALID setelah manual review, tidak ada fix:
+  - `kanji-n3-235` "~階": notasi counter Jepang standar (～階), dipertahankan.
+  - `kanji-n2-078` 篝火/かがりび: berbagi KUN reading card (かがりび), valid.
+  - `kanji-n2-117` 岬/みさき: berbagi KUN reading card (みさき), valid.
+  - `kanji-n2-254` 知恵/ちえ: varian 智恵, reading memakai ON ち, valid.
+  - `kanji-n2-281` 広大/こうだい: makna "luas" = makna card, reading memakai
+    ON こう; borderline tapi tidak jelas salah → dipertahankan.
+
+### Manual sample (50 cards: 10 N5, 10 N4, 10 N3, 10 N2, 10 N1)
+- Semua ON/KUN/common valid; semua example word/reading/meaning konsisten;
+  100% example sample mengandung kanji card-nya.
+- Tidak ada reklasifikasi ON/KUN (tidak ada temuan meragukan).
+
+### Tidak diubah
+- 361 kartu N1 tanpa example tetap kosong (bukan bug).
+- Tidak ada bulk regenerate/translate/rewrite.
