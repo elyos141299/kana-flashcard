@@ -100,7 +100,7 @@ describe("priority", () => {
 
   it("new mengikuti urutan dataset (bukan random)", () => {
     const r = build({ requested: 5 });
-    expect(r.cards.map((c) => c.card.character)).toEqual(["あ", "い", "う", "え", "お"]);
+    expect(r.cards.map((c) => c.card.type === "vocabulary" ? c.card.word : c.card.character)).toEqual(["あ", "い", "う", "え", "お"]);
   });
 });
 
