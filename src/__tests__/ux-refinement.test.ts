@@ -75,6 +75,35 @@ describe("reveal privacy — recall", () => {
   });
 });
 
+describe("screen-reader privacy — aria-hidden pada sisi kartu", () => {
+  it("kana: back face aria-hidden sebelum reveal", () => {
+    const html = renderToStaticMarkup(
+      createElement(Flashcard, {
+        card: HIRAGANA_BASIC[0],
+        index: 0,
+        total: 10,
+        onRate: noop,
+      }),
+    );
+    expect(html).toContain('card-face card-back" aria-hidden="true"');
+    // front face terbaca (aria-hidden="false" atau tidak ada true)
+    expect(html).not.toContain('card-face card-front" aria-hidden="true"');
+  });
+
+  it("kanji: back face aria-hidden sebelum reveal", () => {
+    const html = renderToStaticMarkup(
+      createElement(KanjiFlashcard, {
+        card: KANJI_N5[0],
+        index: 0,
+        total: 10,
+        onRate: noop,
+      }),
+    );
+    expect(html).toContain('card-face card-back kanji-back" aria-hidden="true"');
+    expect(html).not.toContain('card-face card-front" aria-hidden="true"');
+  });
+});
+
 describe("kanji levels availability", () => {
   it("semua level N5–N1 tersedia dan tidak kosong (tidak ada yang disabled)", () => {
     for (const level of ["N5", "N4", "N3", "N2", "N1"] as const) {

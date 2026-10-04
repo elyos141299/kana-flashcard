@@ -144,7 +144,7 @@ export function KanjiFlashcard({
             }
           }}
         >
-          <div className="card-face card-front">
+          <div className="card-face card-front" aria-hidden={revealed}>
             <div className="card-kicker">{kicker}</div>
             {source && <div className="card-source">{SOURCE_LABELS[source]}</div>}
             {mode === "recall" && prompt ? (
@@ -157,7 +157,7 @@ export function KanjiFlashcard({
             )}
             {!revealed && <div className="card-hint">Ketuk untuk membuka</div>}
           </div>
-          <div className="card-face card-back kanji-back">
+          <div className="card-face card-back kanji-back" aria-hidden={!revealed}>
             <div className="card-kicker">{kicker}</div>
             <KanjiBack card={card} />
           </div>

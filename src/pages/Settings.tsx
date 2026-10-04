@@ -119,7 +119,7 @@ export function SettingsPage() {
             style={{ fontWeight: settings.dailyReviewLimit === 0 ? 700 : 400, color: settings.dailyReviewLimit === 0 ? "var(--vermilion)" : undefined }}
             onClick={() => update({ dailyReviewLimit: 0 })}
           >
-            No limit
+            Tanpa batas
           </button>
         </span>
       </div>

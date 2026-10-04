@@ -149,6 +149,8 @@ export function getTodaySummary(args: {
   progress: Record<string, CardProgress>;
   limits: QueueLimits;
   daily: DailyCounts;
+  /** Metadata personal: suspended dikecualikan, sama seperti buildQueue. */
+  cardMeta?: Record<string, CardMeta>;
   now?: Date;
 }): {
   learningDue: number;
@@ -158,6 +160,7 @@ export function getTodaySummary(args: {
 } {
   const { cards, progress, limits, daily } = args;
   const now = args.now ?? new Date();
+  const cardMeta = args.cardMeta ?? {};
   let learningDue = 0;
   let reviewDue = 0;
   let newAvailable = 0;
@@ -165,6 +168,8 @@ export function getTodaySummary(args: {
   let nextReviewMs = Infinity;
 
   for (const card of cards) {
+    // Suspended: dikecualikan dari SEMUA queue — Home harus konsisten.
+    if (cardMeta[card.id]?.suspended) continue;
     const p = progress[card.id];
     const source = classifySource(p ?? null);
     if (source === "new") {
@@ -184,9 +189,12 @@ export function getTodaySummary(args: {
   }
 
   const newRemaining = Math.max(0, limits.dailyNew - daily.newCards);
+  // Review kena daily limit (learning tidak) — konsisten dengan buildQueue.
+  const reviewRemaining =
+    limits.dailyReview <= 0 ? Infinity : Math.max(0, limits.dailyReview - daily.reviewCards);
   return {
     learningDue,
-    reviewDue,
+    reviewDue: Math.min(reviewDue, reviewRemaining),
     newAvailable: Math.min(newAvailable, newRemaining),
     nextReviewAt,
   };

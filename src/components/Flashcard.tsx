@@ -102,7 +102,7 @@ export function Flashcard({
             }
           }}
         >
-          <div className="card-face card-front">
+          <div className="card-face card-front" aria-hidden={revealed}>
             <div className="card-kicker">{kicker}</div>
             {source && <div className="card-source">{SOURCE_LABELS[source]}</div>}
             {mode === "recall" && prompt ? (
@@ -115,7 +115,7 @@ export function Flashcard({
             )}
             {!revealed && <div className="card-hint">Ketuk untuk membuka</div>}
           </div>
-          <div className="card-face card-back">
+          <div className="card-face card-back" aria-hidden={!revealed}>
             <div className="card-kicker">{kicker}</div>
             <KanaBack card={card} />
           </div>

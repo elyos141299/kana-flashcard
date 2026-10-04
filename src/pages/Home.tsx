@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import type { TabId } from "../components/TabBar.js";
 import { loadProgress, loadSettings, loadStats, getDailyCounts } from "../storage/progress.js";
+import { loadCardMeta } from "../storage/cardMeta.js";
 import { selectKana } from "../data/kana/index.js";
 import { selectKanji } from "../data/kanji/index.js";
 import { getTodaySummary, formatNextReview } from "../queue/index.js";
@@ -26,6 +27,7 @@ export function Home({ go }: { go: (t: TabId) => void }) {
       progress: loadProgress(),
       limits: { dailyNew: settings.dailyNewLimit, dailyReview: settings.dailyReviewLimit },
       daily: today,
+      cardMeta: loadCardMeta(),
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

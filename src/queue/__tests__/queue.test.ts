@@ -224,4 +224,30 @@ describe("getTodaySummary", () => {
     expect(s.reviewDue).toBe(1);
     expect(s.newAvailable).toBe(1);
   });
+
+  it("suspended dikecualikan — konsisten dengan buildQueue", () => {
+    const [cNew, cLearn, cReview] = cards;
+    const progress = {
+      [cLearn.id]: makeProgress(cLearn.id, "learning", "2026-10-04T11:00:00"),
+      [cReview.id]: makeProgress(cReview.id, "review", "2026-10-04T11:00:00"),
+    };
+    const cardMeta = {
+      [cLearn.id]: { favorite: false, suspended: true },
+      [cReview.id]: { favorite: false, suspended: true },
+    };
+    const s = getTodaySummary({ cards: [cNew, cLearn, cReview], progress, limits, daily: emptyDaily, cardMeta, now: NOW });
+    expect(s.learningDue).toBe(0);
+    expect(s.reviewDue).toBe(0);
+    expect(s.newAvailable).toBe(1);
+  });
+
+  it("reviewDue dibatasi daily review limit — konsisten dengan buildQueue", () => {
+    const progress: Record<string, ReturnType<typeof makeProgress>> = {};
+    for (const c of cards.slice(0, 5)) {
+      progress[c.id] = makeProgress(c.id, "review", "2026-10-04T11:00:00");
+    }
+    const limited = { dailyNew: 20, dailyReview: 2 };
+    const s = getTodaySummary({ cards: cards.slice(0, 5), progress, limits: limited, daily: emptyDaily, now: NOW });
+    expect(s.reviewDue).toBe(2);
+  });
 });

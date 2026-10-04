@@ -67,6 +67,13 @@
   transform: scale(0.985);
 }
 
+/* Tombol disabled harus terlihat tidak bisa diklik. */
+.btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  transform: none;
+}
+
 .btn-primary {
   background: var(--vermilion);
   border-color: var(--vermilion);
